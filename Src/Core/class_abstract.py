@@ -1,5 +1,6 @@
 from abc import ABC
 import uuid
+from Src.Core.exception import arguments_exception
 
 class abstract(ABC):
     """Абстрактный базовый класс для доменных сущностей."""
@@ -25,15 +26,35 @@ class abstract(ABC):
         """
         Устанавливаем наименование сущности с предварительной валидацией.
         
+        Параметры:
+            value (str): Новое наименование сущности (до 50 символов).
+
         Raises:
-            TypeError: Если переданное значение не является строкой.
-            ValueError: Если переданное значение пустое или состоит только из пробелов.
+            arguments_exception: Если переданное значение не является строкой.
+            arguments_exception: Если переданное значение пустое или состоит только из пробелов.
+            arguments_exception: Если длина наименования превышает 50 символов.
         """
         if not isinstance(value, str):
-            raise TypeError("Наименование должно быть строкой.")
+            raise arguments_exception("Наименование должно быть строкой.")
 
         normalized_name = value.strip()
         if not normalized_name:
-            raise ValueError("Наименование не может быть пустым.")
+            raise arguments_exception("name", "Наименование не может быть пустым.")
+        
+        if len(normalized_name) > 50:
+            raise arguments_exception("name", "Длина наименования не может превышать 50 символов.")
 
         self._name = normalized_name
+
+    def __eq__(self, other: object) -> bool:
+        """Сравнение двух сущностей по id"""
+        if isinstance(other, abstract):
+            return str(self.id) == str(other.id)
+        return False
+    
+    @id.setter
+    def id(self, value:str):
+        if value.strip() == "":
+            raise arguments_exception("value", "Некорректно передан параметр")
+        
+        self._id = value.strip()
