@@ -19,7 +19,7 @@ def test_success_range_model_init_default():
 
 def test_success_range_model_conversion_hierarchy():
     """
-    <summary>Демонстрация работы с моделью единица измерения (п. 4 и 10 ТЗ).</summary>
+    <summary>Демонстрация работы с моделью единица измерения.</summary>
     <description>Создается базовая единица 'грамм' и производная 'кг' с коэффициентом 1000.</description>
     <expected>new_range имеет коэффициент 1000 и ссылается на base_range.</expected>
     """
@@ -120,7 +120,7 @@ def test_exception_group_model_name_too_long():
 
 def test_success_nomenclature_model_full_init():
     """
-    <summary>Проверка создания номенклатуры со всеми параметрами (п. 7, 8, 9 ТЗ).</summary>
+    <summary>Проверка создания номенклатуры со всеми параметрами.</summary>
     <description>Заполняются краткое имя, полное имя, group и unit.</description>
     <expected>Все поля и связи сохранены.</expected>
     """
@@ -174,7 +174,7 @@ def test_exception_nomenclature_model_full_name_empty():
 
 def test_exception_nomenclature_model_full_name_too_long():
     """
-    <summary>Проверка лимита длины full_name (> 255 символов, п. 7 ТЗ).</summary>
+    <summary>Проверка лимита длины full_name (> 255 символов).</summary>
     <description>Передается строка длиной 256 символов.</description>
     <expected>Выбрасывается arguments_exception.</expected>
     """
