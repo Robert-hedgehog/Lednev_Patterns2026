@@ -368,3 +368,16 @@ def test_exception_storage_model_address_too_long():
     storage = storage_model("Склад")
     with pytest.raises(arguments_exception):
         storage.address = "А" * 256
+
+def test_success_range_model_factory_create_killogramm():
+    """
+    <summary>Проверка фабричного метода create_killogramm.</summary>
+    <description>Создание объекта через статический фабричный метод.</description>
+    <expected>Создан килограмм с коэффициентом 1000 и базовой единицей 'Грамм'.</expected>
+    """
+    kg = range_model.create_killogramm()
+
+    assert kg.name == "киллограмм"
+    assert kg.conversion_factor == 1000.0
+    assert kg.base_range is not None
+    assert kg.base_range.name == "грамм"

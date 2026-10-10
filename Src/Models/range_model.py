@@ -70,3 +70,11 @@ class range_model(abstract):
             raise arguments_exception("base_range", "Базовая единица должна являться объектом range_model.")
 
         self._base_range = value
+
+    """
+    Фабричный метод - создать киллограмм
+    """
+    @staticmethod
+    def create_killogramm() -> "range_model":
+        gramm = range_model("грамм", 1.0)
+        return range_model("киллограмм", 1000.0, gramm)

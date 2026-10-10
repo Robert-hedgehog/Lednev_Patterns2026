@@ -4,130 +4,210 @@ from Src.Core.validator import validator
 from Src.Models.range_model import range_model
 from Src.Models.nomenclature_model import nomenclature_model, group_model
 from Src.Models.storage_model import storage_model
+from Src.Models.ingredient_model import ingredient_model
+from Src.Models.recipe_model import recipe_model
 
 
 class storage_manager(abstract_manager):
     """Централизованное хранилище доменных объектов сети ресторанов."""
 
-    __storages: Dict[str, storage_model] = {}
-    __units: Dict[str, range_model] = {}
-    __groups: Dict[str, group_model] = {}
-    __nomenclatures: Dict[str, nomenclature_model] = {}
+    __data: Dict[str, list] = {}
     __is_initialized: bool = False
     __is_loaded: bool = False
 
     def __new__(cls):
+        """Реализация паттерна Singleton."""
         if not hasattr(cls, 'instance'):
             cls.instance = super(storage_manager, cls).__new__(cls)
-            cls.instance.__storages = {}
-            cls.instance.__units = {}
-            cls.instance.__groups = {}
-            cls.instance.__nomenclatures = {}
+            cls.instance.__data = {}
             cls.instance.__is_initialized = False
             cls.instance.__is_loaded = False
         return cls.instance
 
     def __init__(self) -> None:
+        """Инициализация хранилища."""
         super().__init__()
         if not self.__is_initialized:
             self.first_start()
             self.__is_initialized = True
 
+    @staticmethod
+    def range_key() -> str:
+        """Ключ коллекции единиц измерения."""
+        return "range_model"
+
+    @staticmethod
+    def storage_key() -> str:
+        """Ключ коллекции складов."""
+        return "storage_model"
+
+    @staticmethod
+    def group_key() -> str:
+        """Ключ коллекции групп номенклатуры."""
+        return "group_model"
+
+    @staticmethod
+    def nomenclature_key() -> str:
+        """Ключ коллекции номенклатуры."""
+        return "nomenclature_model"
+
+    @staticmethod
+    def recipe_key() -> str:
+        """Ключ коллекции технологических карт."""
+        return "recipe_model"
+
     def first_start(self) -> None:
-        """Формирование начального набора данных при первом запуске."""
-        gram = range_model("грамм", 1.0)
-        kg = range_model("кг", 1000.0, gram)
+        """Формирование начального набора данных через фабричные методы."""
+        kg = range_model.create_killogramm()
+        gram = kg.base_range
         ml = range_model("миллилитр", 1.0)
         liter = range_model("литр", 1000.0, ml)
         piece = range_model("штука", 1.0)
 
-        for unit in [gram, kg, ml, liter, piece]:
-            self.add_unit(unit)
+        self.__data[storage_manager.range_key()] = [gram, kg, ml, liter, piece]
 
-        main_warehouse = storage_model("Производственный цех", "ул. Производственная, д. 1")
-        rest_warehouse_1 = storage_model("Склад Ресторана №1", "ул. Ленина, д. 10")
-        rest_warehouse_2 = storage_model("Склад Ресторана №2 (Доставка)", "пр. Мира, д. 25")
+        warehouse_main = storage_model.create("Производственный цех", "ул. Производственная, д. 1")
+        warehouse_rest1 = storage_model.create("Склад Ресторана №1", "ул. Ленина, д. 10")
+        warehouse_rest2 = storage_model.create("Склад Ресторана №2 (Доставка)", "пр. Мира, д. 25")
 
-        for storage in [main_warehouse, rest_warehouse_1, rest_warehouse_2]:
-            self.add_storage(storage)
+        self.__data[storage_manager.storage_key()] = [warehouse_main, warehouse_rest1, warehouse_rest2]
 
-        raw_group = group_model("Сырье и мясная продукция")
-        semi_group = group_model("Кулинарные полуфабрикаты")
-        dish_group = group_model("Авторские горячие блюда")
-        pack_group = group_model("Фирменная упаковка")
+        raw_group = group_model.create("Сырье и мясная продукция")
+        semi_group = group_model.create("Кулинарные полуфабрикаты")
+        dish_group = group_model.create("Авторские горячие блюда")
+        pack_group = group_model.create("Фирменная упаковка")
 
-        for grp in [raw_group, semi_group, dish_group, pack_group]:
-            self.add_group(grp)
+        self.__data[storage_manager.group_key()] = [raw_group, semi_group, dish_group, pack_group]
 
-        beef_cheeks = nomenclature_model("Говяжьи щеки", "Щеки говяжьи зачищенные охлажденные", raw_group, kg)
-        grain = nomenclature_model("Крупа дождевая", "Крупа пшеничная птитим отборная", raw_group, kg)
-        butter = nomenclature_model("Сливочное масло", "Масло сливочное крестьянское 82.5%", raw_group, kg)
-        meat_sauce = nomenclature_model("Мясной соус", "Соус демигляс концентрированный", semi_group, liter)
-        braised_cheeks = nomenclature_model("Томленые щеки", "Щеки говяжьи длительного томления су-вид", semi_group, kg)
-        rain_porridge_dish = nomenclature_model(
-            "Дождевая каша со щекой",
-            "Дождевая каша с томленной говяжьей щекой в мясном соусе",
-            dish_group,
-            piece
+        beef_cheeks = nomenclature_model.create("Говяжьи щеки", "Щеки говяжьи зачищенные", raw_group, kg)
+        grain = nomenclature_model.create("Крупа дождевая", "Крупа пшеничная птитим отборная", raw_group, kg)
+        butter = nomenclature_model.create("Сливочное масло", "Масло сливочное крестьянское 82.5%", raw_group, kg)
+        cheese = nomenclature_model.create("Сыр Пармезан", "Сыр твердый выдержанный пармезан", raw_group, kg)
+        broth = nomenclature_model.create("Бульон мясной", "Бульон говяжий концентрированный", raw_group, liter)
+        meat_sauce = nomenclature_model.create("Мясной соус", "Соус демигляс", semi_group, liter)
+        greens = nomenclature_model.create("Микрозелень", "Микрозелень кресс-салат", raw_group, gram)
+
+        braised_cheeks_semi = nomenclature_model.create(
+            "Томленые щеки", "Щеки говяжьи длительного томления су-вид", semi_group, kg
+        )
+        rain_porridge_dish = nomenclature_model.create(
+            "Дождевая каша со щекой", "Дождевая каша с томленной говяжьей щекой в мясном соусе", dish_group, piece
         )
 
-        for item in [beef_cheeks, grain, butter, meat_sauce, braised_cheeks, rain_porridge_dish]:
-            self.add_nomenclature(item)
+        self.__data[storage_manager.nomenclature_key()] = [
+            beef_cheeks, grain, butter, cheese, broth, meat_sauce, greens,
+            braised_cheeks_semi, rain_porridge_dish
+        ]
 
+        ing_cheeks = ingredient_model.create(beef_cheeks, brutto=180.0, netto=150.0, unit=gram)
+        ing_sauce_semi = ingredient_model.create(meat_sauce, brutto=50.0, netto=50.0, unit=ml)
+
+        semi_recipe = recipe_model.create(
+            name="Томленые говяжьи щеки (полуфабрикат)",
+            dish=braised_cheeks_semi,
+            ingredients=[ing_cheeks, ing_sauce_semi]
+        )
+
+        ing_semi = ingredient_model.create_from_recipe(
+            recipe=semi_recipe,
+            nomenclature=braised_cheeks_semi,
+            unit=gram
+        )
+        ing_grain = ingredient_model.create(grain, brutto=75.0, netto=75.0, unit=gram)
+        ing_broth = ingredient_model.create(broth, brutto=140.0, netto=140.0, unit=ml)
+        ing_sauce_glaze = ingredient_model.create(meat_sauce, brutto=40.0, netto=40.0, unit=ml)
+        ing_butter = ingredient_model.create(butter, brutto=20.0, netto=20.0, unit=gram)
+        ing_cheese = ingredient_model.create(cheese, brutto=10.0, netto=10.0, unit=gram)
+        ing_greens = ingredient_model.create(greens, brutto=5.0, netto=5.0, unit=gram)
+
+        main_recipe = recipe_model.create(
+            name="Дождевая каша с томленной щекой в мясном соусе",
+            dish=rain_porridge_dish,
+            ingredients=[
+                ing_semi, ing_grain, ing_broth,
+                ing_sauce_glaze, ing_butter, ing_cheese, ing_greens
+            ]
+        )
+
+        self.__data[storage_manager.recipe_key()] = [semi_recipe, main_recipe]
         self.__is_loaded = True
 
     def convert(self) -> bool:
-        """Конвертация и актуализация состояния хранилища."""
+        """Конвертация и подготовка данных хранилища."""
         if not self.__is_initialized:
             self.first_start()
             self.__is_initialized = True
-
         self.__is_loaded = True
         return self.__is_loaded
 
     def add_storage(self, item: storage_model) -> None:
-        """Добавить склад в хранилище."""
+        """Добавить склад в хранилище с контролем уникальности."""
         validator.validate(item, storage_model)
-        self.__storages[str(item.id)] = item
+        items = self.__data.setdefault(storage_manager.storage_key(), [])
+        if not any(str(x.id) == str(item.id) for x in items):
+            items.append(item)
 
     def add_unit(self, item: range_model) -> None:
-        """Добавить единицу измерения в хранилище."""
+        """Добавить единицу измерения в хранилище с контролем уникальности."""
         validator.validate(item, range_model)
-        self.__units[str(item.id)] = item
+        items = self.__data.setdefault(storage_manager.range_key(), [])
+        if not any(str(x.id) == str(item.id) for x in items):
+            items.append(item)
 
     def add_group(self, item: group_model) -> None:
-        """Добавить группу номенклатуры в хранилище."""
+        """Добавить группу номенклатуры в хранилище с контролем уникальности."""
         validator.validate(item, group_model)
-        self.__groups[str(item.id)] = item
+        items = self.__data.setdefault(storage_manager.group_key(), [])
+        if not any(str(x.id) == str(item.id) for x in items):
+            items.append(item)
 
     def add_nomenclature(self, item: nomenclature_model) -> None:
-        """Добавить номенклатуру в хранилище."""
+        """Добавить позицию номенклатуры в хранилище с контролем уникальности."""
         validator.validate(item, nomenclature_model)
-        self.__nomenclatures[str(item.id)] = item
+        items = self.__data.setdefault(storage_manager.nomenclature_key(), [])
+        if not any(str(x.id) == str(item.id) for x in items):
+            items.append(item)
+
+    def add_recipe(self, item: recipe_model) -> None:
+        """Добавить технологическую карту в хранилище с контролем уникальности."""
+        validator.validate(item, recipe_model)
+        items = self.__data.setdefault(storage_manager.recipe_key(), [])
+        if not any(str(x.id) == str(item.id) for x in items):
+            items.append(item)
 
     def load(self, file_name: str = "") -> None:
         """Загрузка данных."""
         self.convert()
 
     @property
+    def data(self) -> Dict[str, list]:
+        """Словарь всех зарегистрированных данных."""
+        return self.__data
+
+    @property
     def storages(self) -> List[storage_model]:
         """Список складов."""
-        return list(self.__storages.values())
+        return self.__data.get(storage_manager.storage_key(), [])
 
     @property
     def units(self) -> List[range_model]:
         """Список единиц измерения."""
-        return list(self.__units.values())
+        return self.__data.get(storage_manager.range_key(), [])
 
     @property
     def groups(self) -> List[group_model]:
         """Список групп номенклатуры."""
-        return list(self.__groups.values())
+        return self.__data.get(storage_manager.group_key(), [])
 
     @property
     def nomenclatures(self) -> List[nomenclature_model]:
         """Список позиций номенклатуры."""
-        return list(self.__nomenclatures.values())
+        return self.__data.get(storage_manager.nomenclature_key(), [])
+
+    @property
+    def recipes(self) -> List[recipe_model]:
+        """Список технологических карт."""
+        return self.__data.get(storage_manager.recipe_key(), [])
 
     @property
     def is_loaded(self) -> bool:
@@ -135,10 +215,7 @@ class storage_manager(abstract_manager):
         return self.__is_loaded
 
     def clear(self) -> None:
-        """Очистить коллекции (для тестов)."""
-        self.__storages.clear()
-        self.__units.clear()
-        self.__groups.clear()
-        self.__nomenclatures.clear()
+        """Очистка всех коллекций хранилища."""
+        self.__data.clear()
         self.__is_initialized = False
         self.__is_loaded = False
