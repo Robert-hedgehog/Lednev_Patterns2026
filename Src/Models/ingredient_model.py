@@ -1,5 +1,3 @@
-# Src/Models/ingredient_model.py
-
 from typing import Optional
 from Src.Core.class_abstract import abstract
 from Src.Core.validator import validator
@@ -20,7 +18,7 @@ class ingredient_model(abstract):
         brutto: float = 0.0,
         netto: float = 0.0,
         unit: Optional[range_model] = None,
-        recipe: Optional[object] = None
+        recipe: Optional["recipe_model"] = None
     ) -> None:
         """
         Инициализация ингредиента.
@@ -84,12 +82,16 @@ class ingredient_model(abstract):
         self._unit = value
 
     @property
-    def recipe(self) -> Optional[object]:
+    def recipe(self) -> Optional["recipe_model"]:
         """Вложенный рецепт полуфабриката."""
         return self._recipe
 
     @recipe.setter
-    def recipe(self, value: Optional[object]) -> None:
+    def recipe(self, value: Optional["recipe_model"]) -> None:
+        """Установка рецепта с проверкой типа."""
+        if value is not None:
+            from Src.Models.recipe_model import recipe_model
+            validator.validate(value, recipe_model)
         self._recipe = value
 
     @property
@@ -138,11 +140,14 @@ class ingredient_model(abstract):
 
     @staticmethod
     def create_from_recipe(
-        recipe: object,
+        recipe: "recipe_model",
         nomenclature: Optional[nomenclature_model] = None,
         unit: Optional[range_model] = None
     ) -> "ingredient_model":
         """Фабричный метод создания ингредиента из полуфабриката."""
+        from Src.Models.recipe_model import recipe_model
+        validator.validate(recipe, recipe_model)
+
         nom = nomenclature or getattr(recipe, "dish", None)
         name = getattr(recipe, "name", "Полуфабрикат")
         return ingredient_model(

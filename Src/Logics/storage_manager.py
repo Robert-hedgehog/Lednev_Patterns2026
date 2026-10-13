@@ -19,15 +19,15 @@ class storage_manager(abstract_manager):
         """Реализация паттерна Singleton."""
         if not hasattr(cls, 'instance'):
             cls.instance = super(storage_manager, cls).__new__(cls)
-            cls.instance.__data = {}
-            cls.instance.__is_initialized = False
-            cls.instance.__is_loaded = False
         return cls.instance
 
     def __init__(self) -> None:
-        """Инициализация хранилища."""
+        """Инициализация данных в конструкторе."""
         super().__init__()
-        if not self.__is_initialized:
+        if not hasattr(self, '_storage_manager__is_initialized') or not self.__is_initialized:
+            self.__data = {}
+            self.__is_initialized = False
+            self.__is_loaded = False
             self.first_start()
             self.__is_initialized = True
 
