@@ -136,3 +136,70 @@ classDiagram
     storage_manager *-- group_model : Хранит уникальные
     storage_manager *-- nomenclature_model : Хранит уникальные
 ```
+
+## 3. Диаграмма классов технологических карт (рецептов)
+
+```mermaid
+classDiagram
+    direction TB
+
+    class abstract {
+        <<abstract>>
+        -UUID _id
+        -str _name
+        +id() UUID
+        +name() str
+    }
+
+    class nomenclature_model {
+        -str _full_name
+        -group_model _group
+        -range_model _unit
+        +create(name, full_name, group, unit)$ nomenclature_model
+    }
+
+    class ingredient_model {
+        -nomenclature_model _nomenclature
+        -range_model _unit
+        -float _brutto
+        -float _netto
+        -recipe_model _recipe
+        +nomenclature() nomenclature_model
+        +unit() range_model
+        +recipe() recipe_model
+        +brutto() float
+        +netto() float
+        +create(nomenclature, brutto, netto, unit)$ ingredient_model
+        +create_from_recipe(recipe, nomenclature, unit)$ ingredient_model
+    }
+
+    class recipe_model {
+        -nomenclature_model _dish
+        -List~ingredient_model~ _ingredients
+        +dish() nomenclature_model
+        +ingredients() List~ingredient_model~
+        +brutto() float
+        +netto() float
+        +add_ingredient(item: ingredient_model) void
+        +remove_ingredient(item: ingredient_model) bool
+        +create(name, dish, ingredients)$ recipe_model
+    }
+
+    class storage_manager {
+        +recipes() List~recipe_model~
+        +add_recipe(item: recipe_model) void
+    }
+
+    abstract <|-- nomenclature_model
+    abstract <|-- ingredient_model
+    abstract <|-- recipe_model
+
+    recipe_model o-- nomenclature_model : готовое блюдо
+    recipe_model *-- ingredient_model : содержит ингредиенты
+    ingredient_model o-- nomenclature_model : продукт
+
+    %% Связь полуфабриката (блюдо в блюде)
+    ingredient_model o-- recipe_model : полуфабрикат в составе блюда
+
+    storage_manager o-- recipe_model : хранит рецепты
+```

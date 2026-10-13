@@ -1,5 +1,3 @@
-# Src/Models/nomenclature_model.py
-
 from Src.Core.class_abstract import abstract
 from Src.Core.exception import arguments_exception
 from Src.Models.range_model import range_model
@@ -20,6 +18,13 @@ class group_model(abstract):
         super().__init__()
         if name is not None:
             self.name = name
+        
+    @staticmethod
+    def create(name: str) -> "group_model":
+        """Фабричный метод создания группы."""
+        group = group_model()
+        group.name = name
+        return group
 
 
 nomenclature_group_model = group_model
@@ -126,3 +131,13 @@ class nomenclature_model(abstract):
             raise arguments_exception("Единица измерения должна быть объектом типа range_model", "unit")
 
         self._unit = value
+
+    @staticmethod
+    def create(
+        name: str,
+        full_name: str = "",
+        group: group_model | None = None,
+        unit: range_model | None = None
+    ) -> "nomenclature_model":
+        """Фабричный метод создания номенклатуры."""
+        return nomenclature_model(name=name, full_name=full_name, group=group, unit=unit)

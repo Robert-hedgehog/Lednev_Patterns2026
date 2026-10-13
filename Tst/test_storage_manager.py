@@ -40,7 +40,7 @@ def test_success_storage_manager_first_start_seeded_units():
 
     assert len(manager.units) >= 5
     assert "грамм" in unit_names
-    assert "кг" in unit_names
+    assert "киллограмм" in unit_names
     assert "литр" in unit_names
 
 

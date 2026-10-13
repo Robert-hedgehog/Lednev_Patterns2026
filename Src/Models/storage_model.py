@@ -42,3 +42,12 @@ class storage_model(abstract):
             raise arguments_exception("address", "Длина адреса не может превышать 255 символов.")
 
         self._address = normalized_address
+
+    @staticmethod
+    def create(name: str, address: str = "") -> "storage_model":
+        """Фабричный метод создания склада."""
+        storage = storage_model()
+        storage.name = name
+        if address:
+            storage.address = address
+        return storage
