@@ -7,5 +7,6 @@
     "ownership_type": "ООО"
   },
   "boss_name": "Леднев Роман Алексеевич",
-  "account_name": "Петрова Анна Сергеевна"
+  "account_name": "Петрова Анна Сергеевна",
+  "response_format": "Markdown"
 }

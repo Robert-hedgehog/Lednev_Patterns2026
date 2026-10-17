@@ -72,6 +72,9 @@ class settings_manager(abstract_manager):
         if "account_name" in self.__data:
             self.__settings.account_name = self.__data["account_name"]
 
+        if "response_format" in self.__data:
+            self.__settings.response_format = self.__data["response_format"]
+
         return True
 
     @property
