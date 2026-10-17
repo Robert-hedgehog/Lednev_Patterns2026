@@ -84,5 +84,10 @@ class recipe_model(abstract):
     ) -> "recipe_model":
         """Фабричный метод создания рецепта."""
         return recipe_model(name=name, dish=dish, ingredients=ingredients)
+    
+    @property
+    def items(self) -> List[ingredient_model]:
+        """Синоним ingredients для совместимости с отчетами."""
+        return self.ingredients
 
 technological_card_model = recipe_model
