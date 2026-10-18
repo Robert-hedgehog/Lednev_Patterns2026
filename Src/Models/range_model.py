@@ -78,3 +78,10 @@ class range_model(abstract):
     def create_killogramm() -> "range_model":
         gramm = range_model("грамм", 1.0)
         return range_model("киллограмм", 1000.0, gramm)
+    
+    def get_report_fields(self) -> dict:
+        """Поля единицы измерения для отчетов."""
+        data = super().get_report_fields()
+        data["conversion_factor"] = self.conversion_factor
+        data["base_range"] = self.base_range.name if self.base_range else "-"
+        return data

@@ -219,3 +219,25 @@ class storage_manager(abstract_manager):
         self.__data.clear()
         self.__is_initialized = False
         self.__is_loaded = False
+
+    def get_by_type_and_id(self, entity_type: str, entity_id: str) -> object:
+        """Поиск сущности в хранилище по типу и идентификатору или имени."""
+        normalized_type = str(entity_type).strip().lower()
+        search = str(entity_id).strip()
+
+        if normalized_type in ("nomenclature", "номенклатура"):
+            collection = self.nomenclatures
+        elif normalized_type in ("range", "unit", "единица"):
+            collection = self.units
+        elif normalized_type in ("recipe", "receipt", "рецепт"):
+            collection = self.recipes
+        else:
+            return None
+
+        for item in collection:
+            item_name = getattr(item, "name", "").strip()
+            item_id = str(getattr(item, "id", "")).strip()
+            if item_id == search or item_name == search or search in item_name:
+                return item
+
+        return None

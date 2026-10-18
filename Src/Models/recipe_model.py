@@ -89,5 +89,24 @@ class recipe_model(abstract):
     def items(self) -> List[ingredient_model]:
         """Синоним ingredients для совместимости с отчетами."""
         return self.ingredients
+    
+    def get_report_fields(self) -> dict:
+        """Поля рецепта для отчетов."""
+        data = super().get_report_fields()
+        data["brutto"] = self.brutto
+        data["netto"] = self.netto
+        return data
+
+    def get_report_items(self) -> list:
+        """Строки ингредиентов рецепта для табличных отчетов."""
+        return [
+            {
+                "id": str(ing.id),
+                "name": ing.name,
+                "brutto": ing.brutto,
+                "netto": ing.netto
+            }
+            for ing in self.ingredients
+        ]
 
 technological_card_model = recipe_model

@@ -2,32 +2,29 @@ from Src.Core.abstract_report import abstract_report
 from Src.Core.class_abstract import abstract
 from Src.Core.validator import validator
 from Src.Dtos.report_result_dto import report_result_dto
-from Src.Models.recipe_model import recipe_model
-from Src.Models.nomenclature_model import nomenclature_model
-from Src.Models.range_model import range_model
 
 
 class xml_report(abstract_report):
     """XML представление отчета."""
 
     def build(self, source: abstract) -> report_result_dto:
-        """Построение XML отчета."""
         validator.validate(source, abstract)
         result = report_result_dto()
+        result.mime_type = "application/xml; charset=utf-8"
+        result.file_extension = "xml"
+        result.is_attachment = False
 
-        if isinstance(source, recipe_model):
+        tag_name = source.__class__.__name__.replace("_model", "")
+        if hasattr(source, "get_report_items"):
+            items = source.get_report_items()
             items_xml = "".join(
-                f"<ingredient><id>{i.id}</id><name>{i.name}</name><brutto>{i.brutto}</brutto><netto>{i.netto}</netto></ingredient>"
-                for i in source.ingredients
+                "<item>" + "".join(f"<{k}>{v}</{k}>" for k, v in row.items()) + "</item>"
+                for row in items
             )
-            result.text = f'<?xml version="1.0" encoding="UTF-8"?><recipe><id>{source.id}</id><name>{source.name}</name><ingredients>{items_xml}</ingredients></recipe>'
-        elif isinstance(source, nomenclature_model):
-            unit_name = source.unit.name if source.unit else ""
-            result.text = f'<?xml version="1.0" encoding="UTF-8"?><nomenclature><id>{source.id}</id><name>{source.name}</name><full_name>{source.full_name}</full_name><unit>{unit_name}</unit></nomenclature>'
-        elif isinstance(source, range_model):
-            base_name = source.base_range.name if source.base_range else ""
-            result.text = f'<?xml version="1.0" encoding="UTF-8"?><range><id>{source.id}</id><name>{source.name}</name><conversion_factor>{source.conversion_factor}</conversion_factor><base>{base_name}</base></range>'
+            inner = f"<id>{source.id}</id><name>{source.name}</name><items>{items_xml}</items>"
         else:
-            result.text = f'<?xml version="1.0" encoding="UTF-8"?><entity><id>{source.id}</id><name>{source.name}</name></entity>'
+            fields = source.get_report_fields()
+            inner = "".join(f"<{k}>{v}</{k}>" for k, v in fields.items())
 
+        result.text = f'<?xml version="1.0" encoding="UTF-8"?><{tag_name}>{inner}</{tag_name}>'
         return result

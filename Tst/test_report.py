@@ -88,8 +88,9 @@ def test_success_markdown_report_binary_content():
 
     assert len(dto.binary) > 0
     decoded = bytes(dto.binary).decode("utf-8")
-    assert "# Технологическая карта:" in decoded
-    assert "| Идентификатор | Ингредиент | Брутто | Нетто |" in decoded
+    assert "# Отчет:" in decoded
+    assert recipe.name in decoded
+    assert "| id | name | brutto | netto |" in decoded
 
 
 def test_success_xml_and_html_reports_structured_text():
@@ -112,5 +113,5 @@ def test_success_xml_and_html_reports_structured_text():
     html_reporter = factory.create(report_type_enum.HTML)
     html_dto = html_reporter.build(unit)
     assert "<!DOCTYPE html>" in html_dto.text
-    assert f"<h2>Единица измерения: {unit.name}</h2>" in html_dto.text
+    assert f"<h2>{unit.name}</h2>" in html_dto.text
     assert len(html_dto.binary) == 0

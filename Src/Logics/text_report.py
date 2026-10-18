@@ -2,30 +2,29 @@ from Src.Core.abstract_report import abstract_report
 from Src.Core.class_abstract import abstract
 from Src.Core.validator import validator
 from Src.Dtos.report_result_dto import report_result_dto
-from Src.Models.recipe_model import recipe_model
-from Src.Models.nomenclature_model import nomenclature_model
-from Src.Models.range_model import range_model
 
 
 class text_report(abstract_report):
     """Текстовое представление отчета."""
 
     def build(self, source: abstract) -> report_result_dto:
-        """Построение текстового отчета."""
         validator.validate(source, abstract)
         result = report_result_dto()
+        result.mime_type = "text/plain; charset=utf-8"
+        result.file_extension = "txt"
+        result.is_attachment = False
 
-        if isinstance(source, recipe_model):
-            header = "Код | Наименование | Брутто | Нетто"
-            rows = [f"{i.id} | {i.name} | {i.brutto} | {i.netto}" for i in source.ingredients]
-            result.text = f"{source.name}\n{header}\n" + "\n".join(rows)
-        elif isinstance(source, nomenclature_model):
-            unit_name = source.unit.name if source.unit else ""
-            result.text = f"Код: {source.id}\nНаименование: {source.name}\nПолное наименование: {source.full_name}\nЕдиница: {unit_name}"
-        elif isinstance(source, range_model):
-            base_name = source.base_range.name if source.base_range else ""
-            result.text = f"Код: {source.id}\nНаименование: {source.name}\nКоэффициент: {source.conversion_factor}\nБазовая: {base_name}"
+        if hasattr(source, "get_report_items"):
+            items = source.get_report_items()
+            if items:
+                headers = list(items[0].keys())
+                header_line = " | ".join(headers)
+                rows = [" | ".join(str(row[h]) for h in headers) for row in items]
+                result.text = f"{source.name}\n{header_line}\n" + "\n".join(rows)
+            else:
+                result.text = f"{source.id} | {source.name}"
         else:
-            result.text = f"Код: {source.id}\nНаименование: {source.name}"
+            fields = source.get_report_fields()
+            result.text = f"Сущность: {source.name}\n" + "\n".join(f"{k}: {v}" for k, v in fields.items())
 
         return result
