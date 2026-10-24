@@ -219,3 +219,58 @@ class storage_manager(abstract_manager):
         self.__data.clear()
         self.__is_initialized = False
         self.__is_loaded = False
+
+    def get_by_type_and_id(self, entity_type: str, entity_id: str) -> object:
+        """Поиск сущности в хранилище по типу и идентификатору или имени."""
+        normalized_type = str(entity_type).strip().lower()
+        search = str(entity_id).strip()
+
+        if normalized_type in ("nomenclature", "номенклатура"):
+            collection = self.nomenclatures
+        elif normalized_type in ("range", "unit", "единица"):
+            collection = self.units
+        elif normalized_type in ("recipe", "receipt", "рецепт"):
+            collection = self.recipes
+        else:
+            return None
+
+        for item in collection:
+            item_name = getattr(item, "name", "").strip()
+            item_id = str(getattr(item, "id", "")).strip()
+            if item_id == search or item_name == search or search in item_name:
+                return item
+
+        return None
+    
+    def get_report_data(self, entity_type: str, entity_id: str):
+        """Формирует и возвращает report_data_dto для запрашиваемой сущности."""
+        from Src.Dtos.report_data_dto import report_data_dto
+
+        t = str(entity_type).strip().lower()
+        search = str(entity_id).strip()
+
+        if t in ("recipe", "receipt", "рецепт"):
+            for item in self.recipes:
+                if str(item.id) == search or item.name == search or search in item.name:
+                    headers = ["id", "name", "brutto", "netto"]
+                    rows = [[str(ing.id), ing.name, ing.brutto, ing.netto] for ing in item.ingredients]
+                    return report_data_dto(item.name, headers, rows)
+
+        elif t in ("nomenclature", "номенклатура"):
+            for item in self.nomenclatures:
+                if str(item.id) == search or item.name == search or search in item.name:
+                    headers = ["id", "name", "full_name", "group", "unit"]
+                    grp = item.group.name if item.group else "-"
+                    u = item.unit.name if item.unit else "-"
+                    rows = [[str(item.id), item.name, item.full_name, grp, u]]
+                    return report_data_dto(item.name, headers, rows)
+
+        elif t in ("range", "unit", "единица"):
+            for item in self.units:
+                if str(item.id) == search or item.name == search or search in item.name:
+                    headers = ["id", "name", "conversion_factor", "base_range"]
+                    base_name = item.base_range.name if item.base_range else "-"
+                    rows = [[str(item.id), item.name, item.conversion_factor, base_name]]
+                    return report_data_dto(item.name, headers, rows)
+
+        return None

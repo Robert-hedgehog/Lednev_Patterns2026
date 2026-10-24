@@ -141,3 +141,11 @@ class nomenclature_model(abstract):
     ) -> "nomenclature_model":
         """Фабричный метод создания номенклатуры."""
         return nomenclature_model(name=name, full_name=full_name, group=group, unit=unit)
+    
+    def get_report_fields(self) -> dict:
+        """Поля номенклатуры для отчетов."""
+        data = super().get_report_fields()
+        data["full_name"] = self.full_name
+        data["group"] = self.group.name if self.group else "-"
+        data["unit"] = self.unit.name if self.unit else "-"
+        return data

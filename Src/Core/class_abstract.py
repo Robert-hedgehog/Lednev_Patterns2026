@@ -58,3 +58,7 @@ class abstract(ABC):
             raise arguments_exception("value", "Некорректно передан параметр")
         
         self._id = value.strip()
+
+    def get_report_fields(self) -> dict:
+        """Возвращает словарь полей сущности для формирования отчетов."""
+        return {"id": str(self.id), "name": self.name}

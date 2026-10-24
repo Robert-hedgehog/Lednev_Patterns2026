@@ -156,3 +156,8 @@ class ingredient_model(abstract):
             recipe=recipe,
             unit=unit or (nom.unit if nom else None)
         )
+    
+    @property
+    def unique_code(self) -> str:
+        """Уникальный код ингредиента."""
+        return str(self.id)
