@@ -1,0 +1,20 @@
+{
+  "full_name": "Щеки говяжьи зачищенные",
+  "group": {
+    "id": "53373d0b-5d8d-4c25-9dcd-dea68f48e66f",
+    "name": "Сырье и мясная продукция"
+  },
+  "id": "8382a686-d09a-48c5-8432-6fc1688918e3",
+  "name": "Говяжьи щеки",
+  "unit": {
+    "base_range": {
+      "base_range": null,
+      "conversion_factor": 1.0,
+      "id": "3fb1f8b2-f6a0-43ac-b8c0-508ae9afb94e",
+      "name": "грамм"
+    },
+    "conversion_factor": 1000.0,
+    "id": "4f9ca555-95e8-4136-b0eb-bf61fe23c0ef",
+    "name": "киллограмм"
+  }
+}

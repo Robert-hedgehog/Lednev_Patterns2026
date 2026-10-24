@@ -1,0 +1,11 @@
+{
+  "base_range": {
+    "base_range": null,
+    "conversion_factor": 1.0,
+    "id": "3fb1f8b2-f6a0-43ac-b8c0-508ae9afb94e",
+    "name": "грамм"
+  },
+  "conversion_factor": 1000.0,
+  "id": "4f9ca555-95e8-4136-b0eb-bf61fe23c0ef",
+  "name": "киллограмм"
+}
