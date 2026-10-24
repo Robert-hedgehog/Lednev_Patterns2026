@@ -16,7 +16,7 @@ app = api.app
 
 
 def build_http_response(dto: report_result_dto):
-    """Полиморфное формирование HTTP-ответа на основе метаданных DTO."""
+    """Полиморфное формирование ответа из DTO без условий."""
     if dto.is_attachment:
         return send_file(
             io.BytesIO(bytes(dto.binary)),
@@ -24,7 +24,6 @@ def build_http_response(dto: report_result_dto):
             download_name=f"report.{dto.file_extension}",
             mimetype=dto.mime_type,
         )
-
     return Response(dto.text, mimetype=dto.mime_type)
 
 
@@ -32,8 +31,8 @@ def build_http_response(dto: report_result_dto):
 def get_report(entity_type: str, entity_id: str, format_name: str):
     """Формирование отчета в указанном формате."""
     decoded_id = urllib.parse.unquote(entity_id)
-    entity = storage.get_by_type_and_id(entity_type, decoded_id)
-    if not entity:
+    data_dto = storage.get_report_data(entity_type, decoded_id)
+    if not data_dto:
         abort(404, f"Сущность {entity_type} с кодом {entity_id} не найдена.")
 
     try:
@@ -42,21 +41,21 @@ def get_report(entity_type: str, entity_id: str, format_name: str):
         abort(400, f"Формат {format_name} не поддерживается.")
 
     reporter = factory.create(fmt)
-    dto = reporter.build(entity)
-    return build_http_response(dto)
+    result = reporter.build(data_dto)
+    return build_http_response(result)
 
 
 @app.route("/api/report/default/<entity_type>/<entity_id>", methods=["GET"])
 def get_default_report(entity_type: str, entity_id: str):
-    """Формирование отчета через create_default на основе настроек."""
+    """Формирование отчета через create_default."""
     decoded_id = urllib.parse.unquote(entity_id)
-    entity = storage.get_by_type_and_id(entity_type, decoded_id)
-    if not entity:
+    data_dto = storage.get_report_data(entity_type, decoded_id)
+    if not data_dto:
         abort(404, f"Сущность {entity_type} с кодом {entity_id} не найдена.")
 
     reporter = factory.create_default()
-    dto = reporter.build(entity)
-    return build_http_response(dto)
+    result = reporter.build(data_dto)
+    return build_http_response(result)
 
 
 if __name__ == "__main__":
