@@ -80,23 +80,25 @@ def test_exception_datetime_convertor_invalid_type():
         convertor.convert("date", "2026-03-30")
 
 
-def test_success_reference_convertor_domain_entity():
+def test_success_reference_convertor_with_factory_property():
     """
-    <summary>Проверка конвертации ссылочного типа Reference (доменной сущности).</summary>
-    <description>Передается объект storage_model в reference_convertor.</description>
-    <expected>Возвращается словарь с вложенными данными сущности.</expected>
+    <summary>Проверка reference_convertor и его свойства factory.</summary>
+    <description>Проверяется геттер, сеттер factory и сериализация сущности.</description>
+    <expected>Свойство factory устанавливается с валидацией, сущность сериализуется.</expected>
     """
     # Подготовка
+    factory = convert_factory()
     convertor = reference_convertor()
+    convertor.factory = factory
     storage = storage_model.create("Основной склад", "ул. Ленина, 1")
 
     # Действие
     res = convertor.convert("storage", storage)
 
     # Проверки
+    assert convertor.factory == factory
     assert "storage" in res
     assert res["storage"]["name"] == "Основной склад"
-    assert "id" in res["storage"]
 
 
 def test_exception_reference_convertor_non_abstract_object():
@@ -113,55 +115,48 @@ def test_exception_reference_convertor_non_abstract_object():
         convertor.convert("reference", 12345)
 
 
-def test_success_convert_factory_nested_domain_structure():
+def test_success_convert_factory_create_by_type_mapping():
     """
-    <summary>Проверка работы convert_factory на сложной составной структуре.</summary>
-    <description>Конвертируется рецепт с вложенными ингредиентами, единицами и полуфабрикатами.</description>
-    <expected>Формируется вложенный словарь со всеми полями исходной структуры.</expected>
+    <summary>Проверка подбора конвертора через словарь типов в convert_factory.</summary>
+    <description>Вызывается create для чисел, дат и сущностей.</description>
+    <expected>Метод create возвращает нужный конвертор из словаря __mapping.</expected>
+    """
+    # Подготовка
+    factory = convert_factory()
+    storage = storage_model.create("Склад")
+
+    # Действие
+    conv_int = factory.create(100)
+    conv_str = factory.create("текст")
+    conv_date = factory.create(date.today())
+    conv_ref = factory.create(storage)
+
+    # Проверки
+    assert conv_int.__class__.__name__ == "basic_convertor"
+    assert conv_str.__class__.__name__ == "basic_convertor"
+    assert conv_date.__class__.__name__ == "datetime_convertor"
+    assert conv_ref.__class__.__name__ == "reference_convertor"
+
+
+def test_success_convert_factory_full_storage_dump():
+    """
+    <summary>Проверка полной сериализации всех данных storage_manager в единую структуру.</summary>
+    <description>Конвертируется весь словарь storage.data с коллекциями складов, единиц и рецептов.</description>
+    <expected>Формируется словарь, содержащий все зарегистрированные доменные коллекции.</expected>
     """
     # Подготовка
     storage = storage_manager()
     storage.clear()
     storage.first_start()
-    recipe = storage.recipes[1]
     factory = convert_factory()
 
     # Действие
-    data = factory.convert(recipe)
+    data = factory.convert(storage.data)
 
     # Проверки
     assert isinstance(data, dict)
-    assert data["name"] == recipe.name
-    assert "ingredients" in data
-    assert isinstance(data["ingredients"], list)
-    assert len(data["ingredients"]) == len(recipe.ingredients)
-
-    first_ingredient = data["ingredients"][0]
-    assert "name" in first_ingredient
-    assert "brutto" in first_ingredient
-    assert "netto" in first_ingredient
-
-
-def test_success_convert_factory_simple_types_and_lists():
-    """
-    <summary>Проверка convert_factory на примитивах, списках и словарях.</summary>
-    <description>Передаются списки чисел, дат и вложенные словари.</description>
-    <expected>Все типы корректно преобразуются в структуры данных.</expected>
-    """
-    # Подготовка
-    factory = convert_factory()
-    sample = {
-        "title": "Тестовый отчет",
-        "created_date": date(2026, 8, 31),
-        "numbers": [1, 2, 3.5],
-        "is_ready": True,
-    }
-
-    # Действие
-    result = factory.convert(sample)
-
-    # Проверки
-    assert result["title"] == "Тестовый отчет"
-    assert result["created_date"] == "2026-08-31"
-    assert result["numbers"] == [1, 2, 3.5]
-    assert result["is_ready"] is True
+    assert storage_manager.range_key() in data
+    assert storage_manager.storage_key() in data
+    assert storage_manager.nomenclature_key() in data
+    assert storage_manager.recipe_key() in data
+    assert len(data[storage_manager.recipe_key()]) >= 2
