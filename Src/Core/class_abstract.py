@@ -62,3 +62,11 @@ class abstract(ABC):
     def get_report_fields(self) -> dict:
         """Возвращает словарь полей сущности для формирования отчетов."""
         return {"id": str(self.id), "name": self.name}
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """Фабричный метод создания сущности из словаря данных."""
+        instance = cls()
+        instance.id = data.get("id", str(instance.id))
+        instance.name = data.get("name", "")
+        return instance

@@ -109,4 +109,16 @@ class recipe_model(abstract):
             for ing in self.ingredients
         ]
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "recipe_model":
+        """Фабричный метод создания рецепта из словаря."""
+        instance = cls(
+            name=data.get("name", ""),
+            dish=data.get("dish"),
+            ingredients=data.get("ingredients")
+        )
+        instance.id = data.get("id", str(instance.id))
+        return instance
+
+
 technological_card_model = recipe_model
