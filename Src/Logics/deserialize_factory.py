@@ -1,4 +1,5 @@
 import json
+import pydoc
 from typing import Dict, Type, Callable
 from Src.Core.abstract_deserializer import abstract_deserializer
 from Src.Core.class_abstract import abstract
@@ -23,15 +24,6 @@ class deserialize_factory(abstract_deserializer):
             "nomenclature_model": nomenclature_model,
             "ingredient_model": ingredient_model,
             "recipe_model": recipe_model,
-        }
-        self.__field_classes: Dict[str, Type[abstract]] = {
-            "group": group_model,
-            "unit": range_model,
-            "base_range": range_model,
-            "nomenclature": nomenclature_model,
-            "dish": nomenclature_model,
-            "ingredients": ingredient_model,
-            "recipe": recipe_model,
         }
         self.__handlers: Dict[type, Callable] = {
             str: self.__handle_string,
@@ -58,6 +50,11 @@ class deserialize_factory(abstract_deserializer):
 
     def __handle_dict(self, data: dict) -> object:
         """Обработка словаря через сопоставление моделей."""
+        if "type" in data:
+            target_class = pydoc.locate(data["type"])
+            if target_class and issubclass(target_class, abstract):
+                return self.deserialize_entity(target_class, data)
+
         registered_keys = set(data.keys()) & set(self.__mapping.keys())
         return self.__dispatch_dict(registered_keys, data)
 
@@ -77,24 +74,11 @@ class deserialize_factory(abstract_deserializer):
     def deserialize_entity(self, target_class: Type[abstract], data: dict) -> abstract:
         """Рекурсивная сборка сущности."""
         prepared_data = {
-            key: self.__resolve_field_value(key, value)
+            key: self.deserialize(value) if isinstance(value, (dict, list)) else value
             for key, value in data.items()
+            if key != "type"
         }
         return target_class.from_dict(prepared_data)
-
-    def __resolve_field_value(self, key: str, value: object) -> object:
-        """Преобразование значения поля через реестр классов."""
-        nested_class = self.__field_classes.get(key)
-        
-        converters = {
-            dict: lambda: self.deserialize_entity(nested_class, value) if nested_class else self.deserialize(value),
-            list: lambda: [
-                self.deserialize_entity(nested_class, item) if isinstance(item, dict) and nested_class else item
-                for item in value
-            ]
-        }
-        converter = converters.get(type(value), lambda: value)
-        return converter()
 
     def deserialize_type(self, type_name: str, data: dict) -> abstract:
         """Точечная десериализация конкретной сущности."""

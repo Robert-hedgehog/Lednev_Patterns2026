@@ -3,248 +3,296 @@
     {
       "base_range": null,
       "conversion_factor": 1.0,
-      "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-      "name": "грамм"
+      "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+      "name": "грамм",
+      "type": "Src.Models.range_model.range_model"
     },
     {
       "base_range": {
         "base_range": null,
         "conversion_factor": 1.0,
-        "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-        "name": "грамм"
+        "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+        "name": "грамм",
+        "type": "Src.Models.range_model.range_model"
       },
       "conversion_factor": 1000.0,
-      "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-      "name": "киллограмм"
+      "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+      "name": "киллограмм",
+      "type": "Src.Models.range_model.range_model"
     },
     {
       "base_range": null,
       "conversion_factor": 1.0,
-      "id": "8c32321d-de86-455a-a669-93a73c08b548",
-      "name": "миллилитр"
+      "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+      "name": "миллилитр",
+      "type": "Src.Models.range_model.range_model"
     },
     {
       "base_range": {
         "base_range": null,
         "conversion_factor": 1.0,
-        "id": "8c32321d-de86-455a-a669-93a73c08b548",
-        "name": "миллилитр"
+        "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+        "name": "миллилитр",
+        "type": "Src.Models.range_model.range_model"
       },
       "conversion_factor": 1000.0,
-      "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-      "name": "литр"
+      "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+      "name": "литр",
+      "type": "Src.Models.range_model.range_model"
     },
     {
       "base_range": null,
       "conversion_factor": 1.0,
-      "id": "e7f2c671-ceb2-4a30-ac31-c3e1acbc452e",
-      "name": "штука"
+      "id": "e6ee2c15-bb75-4ad0-aec5-b62316d3ee56",
+      "name": "штука",
+      "type": "Src.Models.range_model.range_model"
     }
   ],
   "storage_model": [
     {
       "address": "ул. Производственная, д. 1",
-      "id": "c8d55595-17ab-40db-932b-e5969d800b13",
-      "name": "Производственный цех"
+      "id": "0a5f66a7-5aab-4361-92ae-a489dab9de86",
+      "name": "Производственный цех",
+      "type": "Src.Models.storage_model.storage_model"
     },
     {
       "address": "ул. Ленина, д. 10",
-      "id": "85e95df7-02a9-4acc-b7b5-1f2b25202d27",
-      "name": "Склад Ресторана №1"
+      "id": "21115eb7-760c-49f8-9290-380a80d12b64",
+      "name": "Склад Ресторана №1",
+      "type": "Src.Models.storage_model.storage_model"
     },
     {
       "address": "пр. Мира, д. 25",
-      "id": "84150683-8916-40a3-9684-54fa7cdbea6e",
-      "name": "Склад Ресторана №2 (Доставка)"
+      "id": "04aa360b-65ce-4606-999b-4c20bf864bfc",
+      "name": "Склад Ресторана №2 (Доставка)",
+      "type": "Src.Models.storage_model.storage_model"
     }
   ],
   "group_model": [
     {
-      "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-      "name": "Сырье и мясная продукция"
+      "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+      "name": "Сырье и мясная продукция",
+      "type": "Src.Models.nomenclature_model.group_model"
     },
     {
-      "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-      "name": "Кулинарные полуфабрикаты"
+      "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+      "name": "Кулинарные полуфабрикаты",
+      "type": "Src.Models.nomenclature_model.group_model"
     },
     {
-      "id": "23d57314-1ab3-4fe5-9bfd-f72343049e18",
-      "name": "Авторские горячие блюда"
+      "id": "a8a293ea-df87-4ecd-a919-eaa69b284e42",
+      "name": "Авторские горячие блюда",
+      "type": "Src.Models.nomenclature_model.group_model"
     },
     {
-      "id": "4ba22c7d-3a51-48a7-8ad5-302c8e681d5d",
-      "name": "Фирменная упаковка"
+      "id": "9e255c51-e5c6-4aa8-86d6-3a6115706bd0",
+      "name": "Фирменная упаковка",
+      "type": "Src.Models.nomenclature_model.group_model"
     }
   ],
   "nomenclature_model": [
     {
       "full_name": "Щеки говяжьи зачищенные",
       "group": {
-        "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-        "name": "Сырье и мясная продукция"
+        "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+        "name": "Сырье и мясная продукция",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "d2e5e951-6e27-422e-8d18-c68a7dba6442",
+      "id": "019bc3ae-b2d2-4c22-8890-7ce0bbfd2964",
       "name": "Говяжьи щеки",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-          "name": "грамм"
+          "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+          "name": "грамм",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-        "name": "киллограмм"
+        "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+        "name": "киллограмм",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Крупа пшеничная птитим отборная",
       "group": {
-        "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-        "name": "Сырье и мясная продукция"
+        "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+        "name": "Сырье и мясная продукция",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "d96cfd84-7df2-4e63-9774-08c0fc298611",
+      "id": "bf171bc2-3a80-4eac-8a9d-57e5628f4304",
       "name": "Крупа дождевая",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-          "name": "грамм"
+          "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+          "name": "грамм",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-        "name": "киллограмм"
+        "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+        "name": "киллограмм",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Масло сливочное крестьянское 82.5%",
       "group": {
-        "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-        "name": "Сырье и мясная продукция"
+        "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+        "name": "Сырье и мясная продукция",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "70651bfe-de3d-45b5-a840-e437821920c4",
+      "id": "ad21221a-6674-4969-8b8b-8344b924974c",
       "name": "Сливочное масло",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-          "name": "грамм"
+          "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+          "name": "грамм",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-        "name": "киллограмм"
+        "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+        "name": "киллограмм",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Сыр твердый выдержанный пармезан",
       "group": {
-        "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-        "name": "Сырье и мясная продукция"
+        "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+        "name": "Сырье и мясная продукция",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "75264b68-8b00-4b36-bc38-8eac662c8a05",
+      "id": "4fea302b-a69a-4f31-b9f3-bbab1c2606e9",
       "name": "Сыр Пармезан",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-          "name": "грамм"
+          "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+          "name": "грамм",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-        "name": "киллограмм"
+        "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+        "name": "киллограмм",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Бульон говяжий концентрированный",
       "group": {
-        "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-        "name": "Сырье и мясная продукция"
+        "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+        "name": "Сырье и мясная продукция",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "56e1f440-582b-4653-a00a-b9b3090f961f",
+      "id": "2fe6e121-5978-4927-8713-2c4df9e67f66",
       "name": "Бульон мясной",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "8c32321d-de86-455a-a669-93a73c08b548",
-          "name": "миллилитр"
+          "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+          "name": "миллилитр",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-        "name": "литр"
+        "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+        "name": "литр",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Соус демигляс",
       "group": {
-        "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-        "name": "Кулинарные полуфабрикаты"
+        "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+        "name": "Кулинарные полуфабрикаты",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "f3a7a78c-e95c-4d1b-9e49-cbed2c11d3fc",
+      "id": "5bd748b4-200b-4113-87f0-70c218f6cec6",
       "name": "Мясной соус",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "8c32321d-de86-455a-a669-93a73c08b548",
-          "name": "миллилитр"
+          "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+          "name": "миллилитр",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-        "name": "литр"
+        "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+        "name": "литр",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Микрозелень кресс-салат",
       "group": {
-        "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-        "name": "Сырье и мясная продукция"
+        "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+        "name": "Сырье и мясная продукция",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "a1dee22a-9ea9-499f-a5a7-67c000aefde6",
+      "id": "5981e843-ed22-4fc6-9aea-ebdc76e3b5d1",
       "name": "Микрозелень",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": null,
         "conversion_factor": 1.0,
-        "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-        "name": "грамм"
+        "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+        "name": "грамм",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Щеки говяжьи длительного томления су-вид",
       "group": {
-        "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-        "name": "Кулинарные полуфабрикаты"
+        "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+        "name": "Кулинарные полуфабрикаты",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "8819fe62-5d74-41df-9f86-e4525c93bdec",
+      "id": "6adf283d-c062-4c65-8258-1bd9daa8766f",
       "name": "Томленые щеки",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-          "name": "грамм"
+          "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+          "name": "грамм",
+          "type": "Src.Models.range_model.range_model"
         },
         "conversion_factor": 1000.0,
-        "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-        "name": "киллограмм"
+        "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+        "name": "киллограмм",
+        "type": "Src.Models.range_model.range_model"
       }
     },
     {
       "full_name": "Дождевая каша с томленной говяжьей щекой в мясном соусе",
       "group": {
-        "id": "23d57314-1ab3-4fe5-9bfd-f72343049e18",
-        "name": "Авторские горячие блюда"
+        "id": "a8a293ea-df87-4ecd-a919-eaa69b284e42",
+        "name": "Авторские горячие блюда",
+        "type": "Src.Models.nomenclature_model.group_model"
       },
-      "id": "cce50e76-049a-4508-945a-f8e644e8aabe",
+      "id": "4142b731-2285-41f7-8e5c-62e9b2f10123",
       "name": "Дождевая каша со щекой",
+      "type": "Src.Models.nomenclature_model.nomenclature_model",
       "unit": {
         "base_range": null,
         "conversion_factor": 1.0,
-        "id": "e7f2c671-ceb2-4a30-ac31-c3e1acbc452e",
-        "name": "штука"
+        "id": "e6ee2c15-bb75-4ad0-aec5-b62316d3ee56",
+        "name": "штука",
+        "type": "Src.Models.range_model.range_model"
       }
     }
   ],
@@ -254,137 +302,161 @@
       "dish": {
         "full_name": "Щеки говяжьи длительного томления су-вид",
         "group": {
-          "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-          "name": "Кулинарные полуфабрикаты"
+          "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+          "name": "Кулинарные полуфабрикаты",
+          "type": "Src.Models.nomenclature_model.group_model"
         },
-        "id": "8819fe62-5d74-41df-9f86-e4525c93bdec",
+        "id": "6adf283d-c062-4c65-8258-1bd9daa8766f",
         "name": "Томленые щеки",
+        "type": "Src.Models.nomenclature_model.nomenclature_model",
         "unit": {
           "base_range": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           },
           "conversion_factor": 1000.0,
-          "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-          "name": "киллограмм"
+          "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+          "name": "киллограмм",
+          "type": "Src.Models.range_model.range_model"
         }
       },
-      "id": "b65bd3c1-a4f0-4f9b-8f03-fab7da01c3c4",
+      "id": "806f678b-4ac0-4326-8c60-8d5aa5c891b3",
       "ingredients": [
         {
           "brutto": 180.0,
-          "id": "b2a0cca3-1869-4609-a733-186654bae8ed",
+          "id": "c307ce4f-d005-4be2-a835-f8599d4c28f6",
           "name": "Говяжьи щеки",
           "netto": 150.0,
           "nomenclature": {
             "full_name": "Щеки говяжьи зачищенные",
             "group": {
-              "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-              "name": "Сырье и мясная продукция"
+              "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+              "name": "Сырье и мясная продукция",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "d2e5e951-6e27-422e-8d18-c68a7dba6442",
+            "id": "019bc3ae-b2d2-4c22-8890-7ce0bbfd2964",
             "name": "Говяжьи щеки",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                "name": "грамм"
+                "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                "name": "грамм",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-              "name": "киллограмм"
+              "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+              "name": "киллограмм",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 50.0,
-          "id": "c2ac3ef0-52ab-4b32-8d6b-a00e078ca1d1",
+          "id": "4f90f0eb-fad5-4832-8e44-16bcd78cb099",
           "name": "Мясной соус",
           "netto": 50.0,
           "nomenclature": {
             "full_name": "Соус демигляс",
             "group": {
-              "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-              "name": "Кулинарные полуфабрикаты"
+              "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+              "name": "Кулинарные полуфабрикаты",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "f3a7a78c-e95c-4d1b-9e49-cbed2c11d3fc",
+            "id": "5bd748b4-200b-4113-87f0-70c218f6cec6",
             "name": "Мясной соус",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "8c32321d-de86-455a-a669-93a73c08b548",
-                "name": "миллилитр"
+                "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+                "name": "миллилитр",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-              "name": "литр"
+              "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+              "name": "литр",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "8c32321d-de86-455a-a669-93a73c08b548",
-            "name": "миллилитр"
+            "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+            "name": "миллилитр",
+            "type": "Src.Models.range_model.range_model"
           }
         }
       ],
       "name": "Томленые говяжьи щеки (полуфабрикат)",
-      "netto": 200.0
+      "netto": 200.0,
+      "type": "Src.Models.recipe_model.recipe_model"
     },
     {
       "brutto": 520.0,
       "dish": {
         "full_name": "Дождевая каша с томленной говяжьей щекой в мясном соусе",
         "group": {
-          "id": "23d57314-1ab3-4fe5-9bfd-f72343049e18",
-          "name": "Авторские горячие блюда"
+          "id": "a8a293ea-df87-4ecd-a919-eaa69b284e42",
+          "name": "Авторские горячие блюда",
+          "type": "Src.Models.nomenclature_model.group_model"
         },
-        "id": "cce50e76-049a-4508-945a-f8e644e8aabe",
+        "id": "4142b731-2285-41f7-8e5c-62e9b2f10123",
         "name": "Дождевая каша со щекой",
+        "type": "Src.Models.nomenclature_model.nomenclature_model",
         "unit": {
           "base_range": null,
           "conversion_factor": 1.0,
-          "id": "e7f2c671-ceb2-4a30-ac31-c3e1acbc452e",
-          "name": "штука"
+          "id": "e6ee2c15-bb75-4ad0-aec5-b62316d3ee56",
+          "name": "штука",
+          "type": "Src.Models.range_model.range_model"
         }
       },
-      "id": "bebc46b3-542e-48e4-9a1d-61fd6f49ccec",
+      "id": "b46e507a-fb12-4da4-b4cf-064333874fdb",
       "ingredients": [
         {
           "brutto": 230.0,
-          "id": "e990b819-eef5-4de9-b983-859da0701a5e",
+          "id": "57aefed2-7a5c-43ec-9cc7-3ffc90ad4c93",
           "name": "Томленые говяжьи щеки (полуфабрикат)",
           "netto": 200.0,
           "nomenclature": {
             "full_name": "Щеки говяжьи длительного томления су-вид",
             "group": {
-              "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-              "name": "Кулинарные полуфабрикаты"
+              "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+              "name": "Кулинарные полуфабрикаты",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "8819fe62-5d74-41df-9f86-e4525c93bdec",
+            "id": "6adf283d-c062-4c65-8258-1bd9daa8766f",
             "name": "Томленые щеки",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                "name": "грамм"
+                "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                "name": "грамм",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-              "name": "киллограмм"
+              "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+              "name": "киллограмм",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": {
@@ -392,298 +464,353 @@
             "dish": {
               "full_name": "Щеки говяжьи длительного томления су-вид",
               "group": {
-                "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-                "name": "Кулинарные полуфабрикаты"
+                "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+                "name": "Кулинарные полуфабрикаты",
+                "type": "Src.Models.nomenclature_model.group_model"
               },
-              "id": "8819fe62-5d74-41df-9f86-e4525c93bdec",
+              "id": "6adf283d-c062-4c65-8258-1bd9daa8766f",
               "name": "Томленые щеки",
+              "type": "Src.Models.nomenclature_model.nomenclature_model",
               "unit": {
                 "base_range": {
                   "base_range": null,
                   "conversion_factor": 1.0,
-                  "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                  "name": "грамм"
+                  "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                  "name": "грамм",
+                  "type": "Src.Models.range_model.range_model"
                 },
                 "conversion_factor": 1000.0,
-                "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-                "name": "киллограмм"
+                "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+                "name": "киллограмм",
+                "type": "Src.Models.range_model.range_model"
               }
             },
-            "id": "b65bd3c1-a4f0-4f9b-8f03-fab7da01c3c4",
+            "id": "806f678b-4ac0-4326-8c60-8d5aa5c891b3",
             "ingredients": [
               {
                 "brutto": 180.0,
-                "id": "b2a0cca3-1869-4609-a733-186654bae8ed",
+                "id": "c307ce4f-d005-4be2-a835-f8599d4c28f6",
                 "name": "Говяжьи щеки",
                 "netto": 150.0,
                 "nomenclature": {
                   "full_name": "Щеки говяжьи зачищенные",
                   "group": {
-                    "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-                    "name": "Сырье и мясная продукция"
+                    "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+                    "name": "Сырье и мясная продукция",
+                    "type": "Src.Models.nomenclature_model.group_model"
                   },
-                  "id": "d2e5e951-6e27-422e-8d18-c68a7dba6442",
+                  "id": "019bc3ae-b2d2-4c22-8890-7ce0bbfd2964",
                   "name": "Говяжьи щеки",
+                  "type": "Src.Models.nomenclature_model.nomenclature_model",
                   "unit": {
                     "base_range": {
                       "base_range": null,
                       "conversion_factor": 1.0,
-                      "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                      "name": "грамм"
+                      "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                      "name": "грамм",
+                      "type": "Src.Models.range_model.range_model"
                     },
                     "conversion_factor": 1000.0,
-                    "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-                    "name": "киллограмм"
+                    "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+                    "name": "киллограмм",
+                    "type": "Src.Models.range_model.range_model"
                   }
                 },
                 "recipe": null,
+                "type": "Src.Models.ingredient_model.ingredient_model",
                 "unit": {
                   "base_range": null,
                   "conversion_factor": 1.0,
-                  "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                  "name": "грамм"
+                  "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                  "name": "грамм",
+                  "type": "Src.Models.range_model.range_model"
                 }
               },
               {
                 "brutto": 50.0,
-                "id": "c2ac3ef0-52ab-4b32-8d6b-a00e078ca1d1",
+                "id": "4f90f0eb-fad5-4832-8e44-16bcd78cb099",
                 "name": "Мясной соус",
                 "netto": 50.0,
                 "nomenclature": {
                   "full_name": "Соус демигляс",
                   "group": {
-                    "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-                    "name": "Кулинарные полуфабрикаты"
+                    "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+                    "name": "Кулинарные полуфабрикаты",
+                    "type": "Src.Models.nomenclature_model.group_model"
                   },
-                  "id": "f3a7a78c-e95c-4d1b-9e49-cbed2c11d3fc",
+                  "id": "5bd748b4-200b-4113-87f0-70c218f6cec6",
                   "name": "Мясной соус",
+                  "type": "Src.Models.nomenclature_model.nomenclature_model",
                   "unit": {
                     "base_range": {
                       "base_range": null,
                       "conversion_factor": 1.0,
-                      "id": "8c32321d-de86-455a-a669-93a73c08b548",
-                      "name": "миллилитр"
+                      "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+                      "name": "миллилитр",
+                      "type": "Src.Models.range_model.range_model"
                     },
                     "conversion_factor": 1000.0,
-                    "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-                    "name": "литр"
+                    "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+                    "name": "литр",
+                    "type": "Src.Models.range_model.range_model"
                   }
                 },
                 "recipe": null,
+                "type": "Src.Models.ingredient_model.ingredient_model",
                 "unit": {
                   "base_range": null,
                   "conversion_factor": 1.0,
-                  "id": "8c32321d-de86-455a-a669-93a73c08b548",
-                  "name": "миллилитр"
+                  "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+                  "name": "миллилитр",
+                  "type": "Src.Models.range_model.range_model"
                 }
               }
             ],
             "name": "Томленые говяжьи щеки (полуфабрикат)",
-            "netto": 200.0
+            "netto": 200.0,
+            "type": "Src.Models.recipe_model.recipe_model"
           },
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 75.0,
-          "id": "79decf33-0851-4a63-a538-86aa7c8e1837",
+          "id": "28f8de96-7fe2-4b0c-8e6f-27fc63cbaaf0",
           "name": "Крупа дождевая",
           "netto": 75.0,
           "nomenclature": {
             "full_name": "Крупа пшеничная птитим отборная",
             "group": {
-              "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-              "name": "Сырье и мясная продукция"
+              "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+              "name": "Сырье и мясная продукция",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "d96cfd84-7df2-4e63-9774-08c0fc298611",
+            "id": "bf171bc2-3a80-4eac-8a9d-57e5628f4304",
             "name": "Крупа дождевая",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                "name": "грамм"
+                "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                "name": "грамм",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-              "name": "киллограмм"
+              "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+              "name": "киллограмм",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 140.0,
-          "id": "0f782cf6-3f9b-434b-a8ce-9cefd53c089c",
+          "id": "32ded967-ca6e-4cfe-ac94-b2bcb55949e9",
           "name": "Бульон мясной",
           "netto": 140.0,
           "nomenclature": {
             "full_name": "Бульон говяжий концентрированный",
             "group": {
-              "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-              "name": "Сырье и мясная продукция"
+              "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+              "name": "Сырье и мясная продукция",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "56e1f440-582b-4653-a00a-b9b3090f961f",
+            "id": "2fe6e121-5978-4927-8713-2c4df9e67f66",
             "name": "Бульон мясной",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "8c32321d-de86-455a-a669-93a73c08b548",
-                "name": "миллилитр"
+                "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+                "name": "миллилитр",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-              "name": "литр"
+              "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+              "name": "литр",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "8c32321d-de86-455a-a669-93a73c08b548",
-            "name": "миллилитр"
+            "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+            "name": "миллилитр",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 40.0,
-          "id": "6ca72696-b072-4cef-aef5-81e940857fe8",
+          "id": "f22785eb-7423-4f83-9065-43929cb22312",
           "name": "Мясной соус",
           "netto": 40.0,
           "nomenclature": {
             "full_name": "Соус демигляс",
             "group": {
-              "id": "4ffe9afa-cd55-44a3-8981-02e3eeb3ba1d",
-              "name": "Кулинарные полуфабрикаты"
+              "id": "3b5d8ddc-9d3a-4827-b3f4-2f4cd8b18db0",
+              "name": "Кулинарные полуфабрикаты",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "f3a7a78c-e95c-4d1b-9e49-cbed2c11d3fc",
+            "id": "5bd748b4-200b-4113-87f0-70c218f6cec6",
             "name": "Мясной соус",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "8c32321d-de86-455a-a669-93a73c08b548",
-                "name": "миллилитр"
+                "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+                "name": "миллилитр",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "d5428b7e-1ad0-4d89-8b55-27228c907e6b",
-              "name": "литр"
+              "id": "96e45192-17c3-4ec0-ad95-d1ee51513634",
+              "name": "литр",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "8c32321d-de86-455a-a669-93a73c08b548",
-            "name": "миллилитр"
+            "id": "8cb39132-22e5-43dd-bfb3-51aff4606b8a",
+            "name": "миллилитр",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 20.0,
-          "id": "0c01522c-b29a-48a5-adee-19d8891c2719",
+          "id": "22c1b00b-df70-4ab8-b3d9-7e67e22dc613",
           "name": "Сливочное масло",
           "netto": 20.0,
           "nomenclature": {
             "full_name": "Масло сливочное крестьянское 82.5%",
             "group": {
-              "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-              "name": "Сырье и мясная продукция"
+              "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+              "name": "Сырье и мясная продукция",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "70651bfe-de3d-45b5-a840-e437821920c4",
+            "id": "ad21221a-6674-4969-8b8b-8344b924974c",
             "name": "Сливочное масло",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                "name": "грамм"
+                "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                "name": "грамм",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-              "name": "киллограмм"
+              "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+              "name": "киллограмм",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 10.0,
-          "id": "c77d61fe-c719-4212-95da-ea246c699825",
+          "id": "87881928-379a-4103-9827-d1f82347e359",
           "name": "Сыр Пармезан",
           "netto": 10.0,
           "nomenclature": {
             "full_name": "Сыр твердый выдержанный пармезан",
             "group": {
-              "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-              "name": "Сырье и мясная продукция"
+              "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+              "name": "Сырье и мясная продукция",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "75264b68-8b00-4b36-bc38-8eac662c8a05",
+            "id": "4fea302b-a69a-4f31-b9f3-bbab1c2606e9",
             "name": "Сыр Пармезан",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": {
                 "base_range": null,
                 "conversion_factor": 1.0,
-                "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-                "name": "грамм"
+                "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+                "name": "грамм",
+                "type": "Src.Models.range_model.range_model"
               },
               "conversion_factor": 1000.0,
-              "id": "69729c8a-4bfa-4206-87a5-5ef60f37ff1d",
-              "name": "киллограмм"
+              "id": "e53ef74f-9a33-4cbb-9821-ef85b0a202ba",
+              "name": "киллограмм",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           }
         },
         {
           "brutto": 5.0,
-          "id": "3b79e2c3-4b23-4a2d-b803-ee7646c8bee2",
+          "id": "11e7dcdc-fabf-4eac-9bf1-7cb14ef5d883",
           "name": "Микрозелень",
           "netto": 5.0,
           "nomenclature": {
             "full_name": "Микрозелень кресс-салат",
             "group": {
-              "id": "b1e17502-eeb6-4290-833e-2ec54ff03d57",
-              "name": "Сырье и мясная продукция"
+              "id": "523adaf2-2be6-466e-8d56-2c8dd3147400",
+              "name": "Сырье и мясная продукция",
+              "type": "Src.Models.nomenclature_model.group_model"
             },
-            "id": "a1dee22a-9ea9-499f-a5a7-67c000aefde6",
+            "id": "5981e843-ed22-4fc6-9aea-ebdc76e3b5d1",
             "name": "Микрозелень",
+            "type": "Src.Models.nomenclature_model.nomenclature_model",
             "unit": {
               "base_range": null,
               "conversion_factor": 1.0,
-              "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-              "name": "грамм"
+              "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+              "name": "грамм",
+              "type": "Src.Models.range_model.range_model"
             }
           },
           "recipe": null,
+          "type": "Src.Models.ingredient_model.ingredient_model",
           "unit": {
             "base_range": null,
             "conversion_factor": 1.0,
-            "id": "4d8d04e8-e494-4fb2-90e3-214f07a7a12e",
-            "name": "грамм"
+            "id": "e113232d-5025-4bdf-adda-17d00d80a696",
+            "name": "грамм",
+            "type": "Src.Models.range_model.range_model"
           }
         }
       ],
       "name": "Дождевая каша с томленной щекой в мясном соусе",
-      "netto": 490.0
+      "netto": 490.0,
+      "type": "Src.Models.recipe_model.recipe_model"
     }
   ]
 }
