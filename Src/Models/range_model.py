@@ -85,3 +85,14 @@ class range_model(abstract):
         data["conversion_factor"] = self.conversion_factor
         data["base_range"] = self.base_range.name if self.base_range else "-"
         return data
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> "range_model":
+        """Фабричный метод создания единицы измерения из словаря."""
+        instance = cls(
+            name=data.get("name", ""),
+            conversion_factor=float(data.get("conversion_factor", 1.0)),
+            base_range=data.get("base_range")
+        )
+        instance.id = data.get("id", str(instance.id))
+        return instance

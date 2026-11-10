@@ -51,3 +51,10 @@ class storage_model(abstract):
         if address:
             storage.address = address
         return storage
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> "storage_model":
+        """Фабричный метод создания склада из словаря."""
+        instance = cls.create(data.get("name", ""), data.get("address", ""))
+        instance.id = data.get("id", str(instance.id))
+        return instance

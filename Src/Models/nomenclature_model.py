@@ -149,3 +149,15 @@ class nomenclature_model(abstract):
         data["group"] = self.group.name if self.group else "-"
         data["unit"] = self.unit.name if self.unit else "-"
         return data
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> "nomenclature_model":
+        """Фабричный метод создания номенклатуры из словаря."""
+        instance = cls.create(
+            name=data.get("name", ""),
+            full_name=data.get("full_name", ""),
+            group=data.get("group"),
+            unit=data.get("unit")
+        )
+        instance.id = data.get("id", str(instance.id))
+        return instance

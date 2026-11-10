@@ -161,3 +161,17 @@ class ingredient_model(abstract):
     def unique_code(self) -> str:
         """Уникальный код ингредиента."""
         return str(self.id)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "ingredient_model":
+        """Фабричный метод создания ингредиента из словаря."""
+        instance = cls(
+            name=data.get("name", ""),
+            nomenclature=data.get("nomenclature"),
+            brutto=float(data.get("brutto", 0.0)),
+            netto=float(data.get("netto", 0.0)),
+            unit=data.get("unit"),
+            recipe=data.get("recipe")
+        )
+        instance.id = data.get("id", str(instance.id))
+        return instance
