@@ -130,3 +130,16 @@ class organization_model(abstract):
             raise arguments_exception("ownership_type", "Форма собственности не может превышать 50 символов.")
 
         self._ownership_type = normalized_ownership
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "organization_model":
+        """Фабричный метод создания организации из словаря."""
+        instance = cls(
+            name=data.get("name", ""),
+            inn=data.get("inn", ""),
+            bik=data.get("bik", ""),
+            account=data.get("account", ""),
+            ownership_type=data.get("ownership_type", "")
+        )
+        instance.id = data.get("id", str(instance.id))
+        return instance

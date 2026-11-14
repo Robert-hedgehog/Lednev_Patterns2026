@@ -9,6 +9,8 @@ from Src.Models.storage_model import storage_model
 from Src.Models.nomenclature_model import nomenclature_model, group_model
 from Src.Models.ingredient_model import ingredient_model
 from Src.Models.recipe_model import recipe_model
+from Src.Models.organization_model import organization_model
+from Src.Models.settings_model import settings_model
 
 
 class deserialize_factory(abstract_deserializer):
@@ -24,6 +26,9 @@ class deserialize_factory(abstract_deserializer):
             "nomenclature_model": nomenclature_model,
             "ingredient_model": ingredient_model,
             "recipe_model": recipe_model,
+            "organization_model": organization_model,
+            "settings_model": settings_model,
+            "company": organization_model,
         }
         self.__handlers: Dict[type, Callable] = {
             str: self.__handle_string,
@@ -74,7 +79,9 @@ class deserialize_factory(abstract_deserializer):
     def deserialize_entity(self, target_class: Type[abstract], data: dict) -> abstract:
         """Рекурсивная сборка сущности."""
         prepared_data = {
-            key: self.deserialize(value) if isinstance(value, (dict, list)) else value
+            key: self.deserialize_type(key, value)
+            if isinstance(value, dict) and key in self.__mapping
+            else (self.deserialize(value) if isinstance(value, (dict, list)) else value)
             for key, value in data.items()
             if key != "type"
         }

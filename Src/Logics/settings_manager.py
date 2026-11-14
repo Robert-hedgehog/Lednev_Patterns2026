@@ -1,88 +1,57 @@
 import json
+import os
 from Src.Core.abstract_manager import abstract_manager
-from Src.Core.validator import validator, operation_exception
+from Src.Core.validator import operation_exception
 from Src.Models.settings_model import settings_model
-from Src.Models.organization_model import organization_model
+from Src.Logics.deserialize_factory import deserialize_factory
 
 
 class settings_manager(abstract_manager):
-    """
-    Менеджер настроек приложения (Singleton).
-    Загружает конфигурационные данные и формирует модель settings_model.
-    """
+    """Менеджер глобальных настроек приложения."""
 
     __default_file_name: str = "settings.json"
     __settings: settings_model = None
-    __is_loaded: bool = False
-    __data: dict = {}
+    __is_initialized: bool = False
 
     def __new__(cls):
-        """Реализация шаблона Singleton для возврата единственного экземпляра."""
-        if not hasattr(cls, 'instance'):
+        """Реализация паттерна Singleton."""
+        if not hasattr(cls, "instance"):
             cls.instance = super(settings_manager, cls).__new__(cls)
         return cls.instance
 
     def __init__(self) -> None:
         """Инициализация менеджера настроек."""
         super().__init__()
-        if self.__settings is None:
+        if not hasattr(self, "_settings_manager__is_initialized") or not self.__is_initialized:
             self.__settings = settings_model()
+            self._file_name = self.__default_file_name
+            self.__is_initialized = True
+            self.load()
 
     def load(self, file_name: str = "") -> None:
-        """
-        Загрузка данных из конфигурационного файла.
-
-        Параметры:
-            file_name (str): Путь к файлу настроек.
-        """
-        inner_file_name = file_name if file_name and file_name.strip() != "" else self.__default_file_name
-        validator.validate(inner_file_name, str)
+        """Загрузка настроек из JSON-файла."""
+        target_file = file_name.strip() if file_name else self.__default_file_name
+        if not os.path.exists(target_file):
+            raise operation_exception(f"Файл настроек {target_file} не найден.")
 
         try:
-            with open(inner_file_name, "r", encoding="utf-8") as file:
-                self.__data = json.load(file)
-                self.__is_loaded = self.convert()
+            with open(target_file, "r", encoding="utf-8") as file:
+                self._data = json.load(file)
+            self._file_name = target_file
+            self._is_loaded = self.convert()
         except Exception as ex:
-            raise operation_exception(f"Ошибка при загрузке и обработке файла: {inner_file_name}. Детали: {ex}")
+            raise operation_exception(f"Ошибка загрузки настроек: {ex}")
 
     def convert(self) -> bool:
-        """
-        Конвертация загруженных сырых данных JSON в доменные модели.
-
-        Возвращает:
-            bool: True в случае успешной конвертации, иначе False.
-        """
-        if not self.__data or not isinstance(self.__data, dict):
+        """Десериализация настроек через общую фабрику десериализации."""
+        if not isinstance(self._data, dict):
             return False
 
-        company_data = self.__data.get("company")
-        if company_data and isinstance(company_data, dict):
-            org = organization_model(
-                name=company_data.get("name", ""),
-                inn=company_data.get("inn", ""),
-                bik=company_data.get("bik", ""),
-                account=company_data.get("account", ""),
-                ownership_type=company_data.get("ownership_type", "")
-            )
-            self.__settings.company = org
-
-        if "boss_name" in self.__data:
-            self.__settings.boss_name = self.__data["boss_name"]
-
-        if "account_name" in self.__data:
-            self.__settings.account_name = self.__data["account_name"]
-
-        if "response_format" in self.__data:
-            self.__settings.response_format = self.__data["response_format"]
-
+        factory = deserialize_factory()
+        self.__settings = factory.deserialize_type("settings_model", self._data)
         return True
 
     @property
-    def is_loaded(self) -> bool:
-        """Флаг успешной загрузки и конвертации настроек."""
-        return self.__is_loaded
-
-    @property
     def settings(self) -> settings_model:
-        """Модель настроек приложения."""
+        """Текущие настройки приложения."""
         return self.__settings
