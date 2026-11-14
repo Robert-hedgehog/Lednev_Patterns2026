@@ -1,6 +1,8 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple, Type, Callable
 from Src.Core.abstract_manager import abstract_manager
-from Src.Core.validator import validator
+from Src.Core.class_abstract import abstract
+from Src.Core.validator import validator, argument_exception, operation_exception
+from Src.Logics.deserialize_factory import deserialize_factory
 from Src.Models.range_model import range_model
 from Src.Models.nomenclature_model import nomenclature_model, group_model
 from Src.Models.storage_model import storage_model
@@ -220,6 +222,146 @@ class storage_manager(abstract_manager):
         self.__is_initialized = False
         self.__is_loaded = False
 
+    def __get_entity_map(self) -> Dict[str, Tuple[Type[abstract], str]]:
+        """Словарь сопоставления типа сущности с классом модели и ключом коллекции."""
+        return {
+            "range": (range_model, storage_manager.range_key()),
+            "unit": (range_model, storage_manager.range_key()),
+            "storage": (storage_model, storage_manager.storage_key()),
+            "group": (group_model, storage_manager.group_key()),
+            "nomenclature": (nomenclature_model, storage_manager.nomenclature_key()),
+            "recipe": (recipe_model, storage_manager.recipe_key()),
+            "receipt": (recipe_model, storage_manager.recipe_key()),
+        }
+
+    def __get_reference_checkers(self) -> Dict[Type[abstract], Callable[[abstract], bool]]:
+        """Словарь проверок наличия связей сущности с другими объектами."""
+        return {
+            range_model: self.__has_range_references,
+            group_model: self.__has_group_references,
+            nomenclature_model: self.__has_nomenclature_references,
+            recipe_model: self.__has_recipe_references,
+            storage_model: lambda entity: False,
+        }
+
+    def __resolve_entity_meta(self, entity_type: str) -> Tuple[Type[abstract], str]:
+        """Получение класса модели и ключа коллекции по строковому типу."""
+        normalized = str(entity_type).strip().lower()
+        entity_map = self.__get_entity_map()
+        if normalized not in entity_map:
+            raise argument_exception("entity_type", f"Неизвестный тип сущности: {entity_type}")
+        return entity_map[normalized]
+
+    def __has_range_references(self, target: range_model) -> bool:
+        """Проверка использования единицы измерения в других сущностях."""
+        target_id = str(target.id)
+        in_units = any(
+            u.base_range is not None and str(u.base_range.id) == target_id
+            for u in self.units if str(u.id) != target_id
+        )
+        in_nomenclatures = any(
+            n.unit is not None and str(n.unit.id) == target_id
+            for n in self.nomenclatures
+        )
+        in_recipes = any(
+            ing.unit is not None and str(ing.unit.id) == target_id
+            for r in self.recipes for ing in r.ingredients
+        )
+        return in_units or in_nomenclatures or in_recipes
+
+    def __has_group_references(self, target: group_model) -> bool:
+        """Проверка использования группы в номенклатуре."""
+        target_id = str(target.id)
+        return any(
+            n.group is not None and str(n.group.id) == target_id
+            for n in self.nomenclatures
+        )
+
+    def __has_nomenclature_references(self, target: nomenclature_model) -> bool:
+        """Проверка использования номенклатуры в рецептах."""
+        target_id = str(target.id)
+        in_dishes = any(
+            r.dish is not None and str(r.dish.id) == target_id
+            for r in self.recipes
+        )
+        in_ingredients = any(
+            ing.nomenclature is not None and str(ing.nomenclature.id) == target_id
+            for r in self.recipes for ing in r.ingredients
+        )
+        return in_dishes or in_ingredients
+
+    def __has_recipe_references(self, target: recipe_model) -> bool:
+        """Проверка использования рецепта в других рецептах."""
+        target_id = str(target.id)
+        return any(
+            ing.recipe is not None and str(ing.recipe.id) == target_id
+            for r in self.recipes for ing in r.ingredients if str(r.id) != target_id
+        )
+
+    def has_references(self, entity: abstract) -> bool:
+        """Проверка наличия связей сущности с другими доменными сущностями."""
+        checker = self.__get_reference_checkers().get(type(entity))
+        if checker is None:
+            return False
+        return checker(entity)
+
+    def get_entities(self, entity_type: str) -> List[abstract]:
+        """Получить список всех сущностей указанного типа."""
+        _, key = self.__resolve_entity_meta(entity_type)
+        return self.__data.get(key, [])
+
+    def get_entity(self, entity_type: str, entity_id: str) -> abstract:
+        """Найти сущность по типу и идентификатору."""
+        collection = self.get_entities(entity_type)
+        search_id = str(entity_id).strip()
+        for item in collection:
+            if str(item.id) == search_id:
+                return item
+        raise operation_exception(f"Сущность {entity_type} с кодом {entity_id} не найдена.")
+
+    def add_entity(self, entity_type: str, data: dict) -> abstract:
+        """Создать и добавить новую сущность с валидацией."""
+        validator.validate(data, dict)
+        model_cls, key = self.__resolve_entity_meta(entity_type)
+        entity = deserialize_factory().deserialize_entity(model_cls, data)
+
+        items = self.__data.setdefault(key, [])
+        if any(str(x.id) == str(entity.id) for x in items):
+            raise operation_exception(f"Сущность с кодом {entity.id} уже существует.")
+
+        items.append(entity)
+        return entity
+
+    def update_entity(self, entity_type: str, entity_id: str, data: dict) -> abstract:
+        """Обновить существующую сущность с проверкой целостности кода."""
+        validator.validate(data, dict)
+        model_cls, key = self.__resolve_entity_meta(entity_type)
+        existing = self.get_entity(entity_type, entity_id)
+
+        new_id = str(data.get("id", existing.id)).strip()
+        if new_id != str(existing.id) and self.has_references(existing):
+            raise operation_exception("Запрещено менять код сущности, связанной с другими сущностями.")
+
+        payload = dict(data)
+        payload.setdefault("id", str(existing.id))
+        updated = deserialize_factory().deserialize_entity(model_cls, payload)
+
+        items = self.__data[key]
+        index = items.index(existing)
+        items[index] = updated
+        return updated
+
+    def delete_entity(self, entity_type: str, entity_id: str) -> bool:
+        """Удалить сущность после проверки отсутствия связей."""
+        _, key = self.__resolve_entity_meta(entity_type)
+        existing = self.get_entity(entity_type, entity_id)
+
+        if self.has_references(existing):
+            raise operation_exception("Запрещено удалять сущность, связанную с другими сущностями.")
+
+        self.__data[key].remove(existing)
+        return True
+
     def get_by_type_and_id(self, entity_type: str, entity_id: str) -> object:
         """Поиск сущности в хранилище по типу и идентификатору или имени."""
         normalized_type = str(entity_type).strip().lower()
@@ -241,7 +383,7 @@ class storage_manager(abstract_manager):
                 return item
 
         return None
-    
+
     def get_report_data(self, entity_type: str, entity_id: str):
         """Формирует и возвращает report_data_dto для запрашиваемой сущности."""
         from Src.Dtos.report_data_dto import report_data_dto
