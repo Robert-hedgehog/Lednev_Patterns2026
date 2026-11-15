@@ -9,10 +9,12 @@ from Src.Logics.convert_factory import convert_factory
 from Src.Dtos.report_type_enum import report_type_enum
 from Src.Dtos.report_result_dto import report_result_dto
 from Src.Core.validator import argument_exception, operation_exception
+from Src.Logics.reference_service import reference_service
 
 storage = storage_manager()
 factory = report_factory()
 converter = convert_factory()
+service = reference_service(storage)
 
 api = connexion.FlaskApp(__name__, specification_dir="./")
 app = api.app
@@ -68,7 +70,7 @@ def get_report_formats():
 def get_entities(entity_type: str):
     """Получение списка доменных сущностей указанного типа."""
     try:
-        items = storage.get_entities(entity_type)
+        items = service.get_all(entity_type)
         return jsonify(converter.convert(items)), 200
     except argument_exception as ex:
         return jsonify({"detail": str(ex)}), 400
@@ -78,7 +80,7 @@ def get_entity(entity_type: str, entity_id: str):
     """Получение доменной сущности по идентификатору."""
     try:
         decoded_id = urllib.parse.unquote(entity_id)
-        item = storage.get_entity(entity_type, decoded_id)
+        item = service.get_by_id(entity_type, decoded_id)
         return jsonify(converter.convert(item)), 200
     except argument_exception as ex:
         return jsonify({"detail": str(ex)}), 400
@@ -89,7 +91,7 @@ def get_entity(entity_type: str, entity_id: str):
 def create_entity(entity_type: str, body: dict):
     """Создание новой доменной сущности."""
     try:
-        created = storage.add_entity(entity_type, body)
+        created = service.create(entity_type, body)
         return jsonify(converter.convert(created)), 201
     except (argument_exception, operation_exception) as ex:
         return jsonify({"detail": str(ex)}), 400
@@ -99,7 +101,7 @@ def update_entity(entity_type: str, entity_id: str, body: dict):
     """Обновление существующей доменной сущности."""
     try:
         decoded_id = urllib.parse.unquote(entity_id)
-        updated = storage.update_entity(entity_type, decoded_id, body)
+        updated = service.update(entity_type, decoded_id, body)
         return jsonify(converter.convert(updated)), 200
     except argument_exception as ex:
         return jsonify({"detail": str(ex)}), 400
@@ -112,7 +114,7 @@ def delete_entity(entity_type: str, entity_id: str):
     """Удаление доменной сущности."""
     try:
         decoded_id = urllib.parse.unquote(entity_id)
-        storage.delete_entity(entity_type, decoded_id)
+        service.delete(entity_type, decoded_id)
         return jsonify({"status": "deleted"}), 200
     except argument_exception as ex:
         return jsonify({"detail": str(ex)}), 400
