@@ -104,7 +104,7 @@ class reference_service:
             self.__rebuild_index()
 
     def has_references(self, target: abstract) -> bool:
-        """Проверка наличия связей сущности за O(1) по обратному индексу."""
+        """Проверка наличия связей сущности по обратному индексу."""
         self.__sync_index()
         return bool(self.__ref_index.get(str(target.id)))
 
