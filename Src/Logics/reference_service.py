@@ -1,26 +1,33 @@
-from typing import Callable, Dict, List, Tuple, Type
+from typing import Callable, Dict, List, Set, Tuple, Type
 from Src.Core.class_abstract import abstract
 from Src.Core.common import common
 from Src.Core.validator import validator, argument_exception, operation_exception
 from Src.Logics.storage_manager import storage_manager
 from Src.Logics.deserialize_factory import deserialize_factory
+from Src.Models.range_model import range_model
+from Src.Models.nomenclature_model import nomenclature_model
+from Src.Models.ingredient_model import ingredient_model
+from Src.Models.recipe_model import recipe_model
 
 
 class reference_service:
     """Сервисный слой для CRUD-операций и контроля ссылочной целостности."""
 
     def __init__(self, storage: storage_manager = None) -> None:
-        """Инициализация сервиса с хранилищем данных."""
+        """Инициализация сервиса с хранилищем и обратным индексом ссылок."""
         self.__storage = storage or storage_manager()
-        self.__checkers: Dict[type, Callable] = {
-            abstract: self.__check_abstract_ref,
-            list: self.__check_iterable_ref,
-            tuple: self.__check_iterable_ref,
-            set: self.__check_iterable_ref,
+        self.__ref_index: Dict[str, Set[str]] = {}
+        self.__entity_refs: Dict[str, Set[str]] = {}
+        self.__indexed_version: int = -1
+        self.__extractors: Dict[type, Callable[[abstract], List[object]]] = {
+            range_model: lambda x: [x.base_range],
+            nomenclature_model: lambda x: [x.group, x.unit],
+            ingredient_model: lambda x: [x.nomenclature, x.unit, x.recipe],
+            recipe_model: lambda x: [x.dish, *x.ingredients],
         }
 
     def __resolve_meta(self, entity_type: str) -> Tuple[str, Type[abstract]]:
-        """Поиск ключа коллекции и класса модели через рефлексию доменов."""
+        """Поиск ключа коллекции и класса модели."""
         normalized = str(entity_type).strip().lower()
         domains = common.domain_models(storage_manager)
         aliases = {key: key for key in domains}
@@ -35,39 +42,71 @@ class reference_service:
             raise argument_exception("entity_type", f"Неизвестный тип сущности: {entity_type}")
         return target_key, domains[target_key]
 
-    def __check_abstract_ref(self, val: abstract, target_id: str, visited: set) -> bool:
-        """Проверка ссылки внутри доменной сущности."""
-        return str(val.id) == target_id or self.__contains_reference(val, target_id, visited)
+    def __extract_ref_ids(self, entity: abstract) -> Set[str]:
+        """Извлечение идентификаторов связанных сущностей без рефлексии."""
+        refs: Set[str] = set()
+        root_id = str(entity.id)
+        queue: List[abstract] = [entity]
+        visited: Set[int] = set()
 
-    def __check_iterable_ref(self, val: object, target_id: str, visited: set) -> bool:
-        """Проверка ссылок внутри коллекции элементов."""
-        return any(self.__check_value_reference(item, target_id, visited) for item in val)
+        while queue:
+            current = queue.pop()
+            ptr = id(current)
+            if ptr in visited:
+                continue
+            visited.add(ptr)
 
-    def __check_value_reference(self, val: object, target_id: str, visited: set) -> bool:
-        """Диспетчеризация проверки значения на ссылку по типу."""
-        handler = next((fn for cls, fn in self.__checkers.items() if isinstance(val, cls)), None)
-        return handler(val, target_id, visited) if handler else False
+            extractor = self.__extractors.get(type(current))
+            if not extractor:
+                continue
 
-    def __contains_reference(self, obj: abstract, target_id: str, visited: set) -> bool:
-        """Рекурсивный поиск ссылки на target_id в свойствах объекта."""
-        obj_ptr = id(obj)
-        if obj_ptr in visited:
-            return False
-        visited.add(obj_ptr)
-        return any(
-            self.__check_value_reference(getattr(obj, attr, None), target_id, visited)
-            for attr in common.get_fields(obj)
-        )
+            for linked in extractor(current):
+                if linked is None:
+                    continue
+                linked_id = str(linked.id)
+                if linked_id != root_id:
+                    refs.add(linked_id)
+                if type(linked) in self.__extractors:
+                    queue.append(linked)
+
+        return refs
+
+    def __index_entity(self, entity: abstract) -> None:
+        """Добавление связей сущности в обратный индекс."""
+        owner_id = str(entity.id)
+        refs = self.__extract_ref_ids(entity)
+        self.__entity_refs[owner_id] = refs
+        for ref_id in refs:
+            self.__ref_index.setdefault(ref_id, set()).add(owner_id)
+
+    def __unindex_entity(self, entity: abstract) -> None:
+        """Удаление связей сущности из обратного индекса."""
+        owner_id = str(entity.id)
+        for ref_id in self.__entity_refs.pop(owner_id, ()):
+            owners = self.__ref_index.get(ref_id)
+            if owners:
+                owners.discard(owner_id)
+                if not owners:
+                    del self.__ref_index[ref_id]
+
+    def __rebuild_index(self) -> None:
+        """Построение обратного индекса по текущему состоянию хранилища."""
+        self.__ref_index.clear()
+        self.__entity_refs.clear()
+        for collection in self.__storage.data.values():
+            for item in collection:
+                self.__index_entity(item)
+        self.__indexed_version = self.__storage.version
+
+    def __sync_index(self) -> None:
+        """Синхронизация индекса при изменении версии хранилища."""
+        if self.__indexed_version != self.__storage.version:
+            self.__rebuild_index()
 
     def has_references(self, target: abstract) -> bool:
-        """Универсальная проверка связей сущности со всеми объектами хранилища."""
-        target_id = str(target.id)
-        visited: set = set()
-        items = (
-            item for collection in self.__storage.data.values()
-            for item in collection if str(item.id) != target_id
-        )
-        return any(self.__contains_reference(item, target_id, visited) for item in items)
+        """Проверка наличия связей сущности по обратному индексу."""
+        self.__sync_index()
+        return bool(self.__ref_index.get(str(target.id)))
 
     def get_all(self, entity_type: str) -> List[abstract]:
         """Получить список всех сущностей указанного типа."""
@@ -83,7 +122,8 @@ class reference_service:
         return found
 
     def create(self, entity_type: str, data: dict) -> abstract:
-        """Создать и добавить новую сущность с валидацией."""
+        """Создать и добавить новую сущность с обновлением индекса."""
+        self.__sync_index()
         validator.validate(data, dict)
         key, model_cls = self.__resolve_meta(entity_type)
         entity = deserialize_factory().deserialize_entity(model_cls, data)
@@ -93,10 +133,12 @@ class reference_service:
             raise operation_exception(f"Сущность с кодом {entity.id} уже существует.")
 
         items.append(entity)
+        self.__index_entity(entity)
         return entity
 
     def update(self, entity_type: str, entity_id: str, data: dict) -> abstract:
         """Обновить существующую сущность с проверкой целостности кода."""
+        self.__sync_index()
         validator.validate(data, dict)
         key, model_cls = self.__resolve_meta(entity_type)
         existing = self.get_by_id(entity_type, entity_id)
@@ -109,17 +151,21 @@ class reference_service:
         payload.setdefault("id", str(existing.id))
         updated = deserialize_factory().deserialize_entity(model_cls, payload)
 
+        self.__unindex_entity(existing)
         items = self.__storage.data[key]
         items[items.index(existing)] = updated
+        self.__index_entity(updated)
         return updated
 
     def delete(self, entity_type: str, entity_id: str) -> bool:
         """Удалить сущность после проверки отсутствия связей."""
+        self.__sync_index()
         key, _ = self.__resolve_meta(entity_type)
         existing = self.get_by_id(entity_type, entity_id)
 
         if self.has_references(existing):
             raise operation_exception("Запрещено удалять сущность, связанную с другими сущностями.")
 
+        self.__unindex_entity(existing)
         self.__storage.data[key].remove(existing)
         return True

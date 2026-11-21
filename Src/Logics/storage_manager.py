@@ -15,6 +15,7 @@ class storage_manager(abstract_manager):
     __data: Dict[str, list] = {}
     __is_initialized: bool = False
     __is_loaded: bool = False
+    __version: int = 0
 
     def __new__(cls):
         """Реализация паттерна Singleton."""
@@ -31,6 +32,7 @@ class storage_manager(abstract_manager):
             self.__is_loaded = False
             self.first_start()
             self.__is_initialized = True
+            self.__version = 0
 
     @staticmethod
     def range_key() -> str:
@@ -137,6 +139,7 @@ class storage_manager(abstract_manager):
 
         self.__data[storage_manager.recipe_key()] = [semi_recipe, main_recipe]
         self.__is_loaded = True
+        self.__version += 1
 
     def convert(self) -> bool:
         """Конвертация и подготовка данных хранилища."""
@@ -152,6 +155,7 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.storage_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        self.__version += 1
 
     def add_unit(self, item: range_model) -> None:
         """Добавить единицу измерения в хранилище с контролем уникальности."""
@@ -159,6 +163,7 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.range_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        self.__version += 1
 
     def add_group(self, item: group_model) -> None:
         """Добавить группу номенклатуры в хранилище с контролем уникальности."""
@@ -166,6 +171,7 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.group_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        self.__version += 1
 
     def add_nomenclature(self, item: nomenclature_model) -> None:
         """Добавить позицию номенклатуры в хранилище с контролем уникальности."""
@@ -173,6 +179,7 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.nomenclature_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        self.__version += 1
 
     def add_recipe(self, item: recipe_model) -> None:
         """Добавить технологическую карту в хранилище с контролем уникальности."""
@@ -180,6 +187,7 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.recipe_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        self.__version += 1
 
     def load(self, file_name: str = "") -> None:
         """Загрузка данных."""
@@ -225,6 +233,7 @@ class storage_manager(abstract_manager):
         self.__data.clear()
         self.__is_initialized = False
         self.__is_loaded = False
+        self.__version += 1
 
     def get_by_type_and_id(self, entity_type: str, entity_id: str) -> object:
         """Поиск сущности в хранилище по типу и идентификатору или имени."""
@@ -280,3 +289,8 @@ class storage_manager(abstract_manager):
                     return report_data_dto(item.name, headers, rows)
 
         return None
+    
+    @property
+    def version(self) -> int:
+        """Версия состояния хранилища."""
+        return self.__version
