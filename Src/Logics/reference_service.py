@@ -8,6 +8,7 @@ from Src.Models.range_model import range_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.ingredient_model import ingredient_model
 from Src.Models.recipe_model import recipe_model
+from Src.Models.transaction_model import transaction_model
 
 
 class reference_service:
@@ -24,6 +25,7 @@ class reference_service:
             nomenclature_model: lambda x: [x.group, x.unit],
             ingredient_model: lambda x: [x.nomenclature, x.unit, x.recipe],
             recipe_model: lambda x: [x.dish, *x.ingredients],
+            transaction_model: lambda x: [x.storage, x.nomenclature, x.unit],
         }
 
     def __resolve_meta(self, entity_type: str) -> Tuple[str, Type[abstract]]:
