@@ -7,6 +7,8 @@ from Src.Models.nomenclature_model import nomenclature_model, group_model
 from Src.Models.storage_model import storage_model
 from Src.Models.ingredient_model import ingredient_model
 from Src.Models.recipe_model import recipe_model
+from datetime import datetime
+from Src.Models.transaction_model import transaction_model
 
 
 class storage_manager(abstract_manager):
@@ -58,6 +60,11 @@ class storage_manager(abstract_manager):
     def recipe_key() -> str:
         """Ключ коллекции технологических карт."""
         return "recipe_model"
+    
+    @staticmethod
+    def transaction_key() -> str:
+        """Ключ коллекции складских транзакций."""
+        return "transaction_model"
 
     @staticmethod
     def domains() -> dict:
@@ -140,6 +147,14 @@ class storage_manager(abstract_manager):
         self.__data[storage_manager.recipe_key()] = [semi_recipe, main_recipe]
         self.__is_loaded = True
         self.__version += 1
+
+        tx1 = transaction_model.create(datetime(2026, 1, 5, 9, 0), warehouse_main, beef_cheeks, 10.0, kg)
+        tx2 = transaction_model.create(datetime(2026, 1, 10, 12, 0), warehouse_main, beef_cheeks, -2500.0, gram)
+        tx3 = transaction_model.create(datetime(2026, 1, 12, 14, 0), warehouse_main, beef_cheeks, 5.0, kg)
+        tx4 = transaction_model.create(datetime(2026, 1, 8, 10, 0), warehouse_rest1, grain, 4.0, kg)
+        tx5 = transaction_model.create(datetime(2026, 1, 15, 18, 0), warehouse_rest1, grain, -1500.0, gram)
+
+        self.__data[storage_manager.transaction_key()] = [tx1, tx2, tx3, tx4, tx5]
 
     def convert(self) -> bool:
         """Конвертация и подготовка данных хранилища."""
@@ -294,3 +309,16 @@ class storage_manager(abstract_manager):
     def version(self) -> int:
         """Версия состояния хранилища."""
         return self.__version
+    
+    @property
+    def transactions(self) -> List[transaction_model]:
+        """Список складских транзакций."""
+        return self.__data.get(storage_manager.transaction_key(), [])
+    
+    def add_transaction(self, item: transaction_model) -> None:
+        """Добавить складскую транзакцию в хранилище с контролем уникальности."""
+        validator.validate(item, transaction_model)
+        items = self.__data.setdefault(storage_manager.transaction_key(), [])
+        if not any(str(x.id) == str(item.id) for x in items):
+            items.append(item)
+        self.__version += 1
