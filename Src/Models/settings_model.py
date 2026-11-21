@@ -57,3 +57,14 @@ class settings_model(abstract):
             self.__response_format = value
         else:
             raise ValueError("Некорректный тип для response_format.")
+        
+    @classmethod
+    def from_dict(cls, data: dict) -> "settings_model":
+        """Фабричный метод создания настроек из словаря."""
+        instance = cls()
+        fields = ("id", "company", "boss_name", "account_name", "response_format")
+        for field in fields:
+            value = data.get(field)
+            if value is not None:
+                setattr(instance, field, value)
+        return instance

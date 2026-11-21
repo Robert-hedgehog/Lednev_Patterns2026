@@ -1,5 +1,6 @@
 from typing import Dict, List
 from Src.Core.abstract_manager import abstract_manager
+from Src.Core.common import common
 from Src.Core.validator import validator
 from Src.Models.range_model import range_model
 from Src.Models.nomenclature_model import nomenclature_model, group_model
@@ -55,6 +56,11 @@ class storage_manager(abstract_manager):
     def recipe_key() -> str:
         """Ключ коллекции технологических карт."""
         return "recipe_model"
+
+    @staticmethod
+    def domains() -> dict:
+        """Получить словарь всех ключей и описаний к ним."""
+        return common.domains(storage_manager)
 
     def first_start(self) -> None:
         """Формирование начального набора данных через фабричные методы."""
@@ -241,7 +247,7 @@ class storage_manager(abstract_manager):
                 return item
 
         return None
-    
+
     def get_report_data(self, entity_type: str, entity_id: str):
         """Формирует и возвращает report_data_dto для запрашиваемой сущности."""
         from Src.Dtos.report_data_dto import report_data_dto
