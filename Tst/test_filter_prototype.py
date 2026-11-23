@@ -4,7 +4,7 @@ from main import api, storage
 from Src.Dtos.filter_dto import filter_dto
 from Src.Dtos.filter_type_enum import filter_type_enum
 from Src.Logics.domain_prototype import domain_prototype
-from Src.Logics.tbs_prototype import tbs_prototype
+from Src.Logics.tbs_service import tbs_service
 
 
 @pytest.fixture(autouse=True)
@@ -67,42 +67,43 @@ def test_success_domain_prototype_filter_like_for_all_domains():
     assert len(rec_res.data) == 1
 
 
-def test_success_domain_prototype_nested_search_and_chaining():
+def test_success_domain_prototype_nested_model_name_and_chaining():
     """
-    <summary>Проверка поиска во вложенных структурах и цепочки клонирования прототипа.</summary>
-    <description>Поиск по базовой единице 'грамм' и по пути 'base_range.name', а также цепочка фильтров.</description>
-    <expected>Поиск по 'name' находит грамм и килограмм, а по 'base_range.name' только килограмм.</expected>
+    <summary>Проверка поиска во вложенных структурах через model_name и цепочки прототипа.</summary>
+    <description>Фильтруются единицы измерения по model_name='base_range' и номенклатура по model_name='group'.</description>
+    <expected>Найдена производная единица 'киллограмм' и номенклатура нужной группы.</expected>
     """
     # Подготовка
-    proto = domain_prototype(storage.units)
-    nested_any = filter_dto.create("name", "грамм", filter_type_enum.EQUALS)
-    nested_path = filter_dto.create("base_range.name", "грамм", filter_type_enum.EQUALS)
+    unit_dto = filter_dto.create("name", "грамм", filter_type_enum.EQUALS, model_name="base_range")
+    nom_dto = filter_dto.create("name", "Авторские горячие блюда", filter_type_enum.EQUALS, model_name="group")
+    unit_proto = domain_prototype(storage.units)
+    nom_proto = domain_prototype(storage.nomenclatures)
 
     # Действие
-    res_any = proto.filter(nested_any)
-    res_path = res_any.filter(nested_path)
+    res_units = unit_proto.filter(unit_dto)
+    res_noms = nom_proto.filter(nom_dto)
 
     # Проверки
-    names_any = [u.name for u in res_any.data]
-    assert "грамм" in names_any
-    assert "киллограмм" in names_any
-    assert len(res_path.data) == 1
-    assert res_path.data[0].name == "киллограмм"
+    assert len(res_units.data) == 1
+    assert res_units.data[0].name == "киллограмм"
+    assert len(res_noms.data) == 1
+    assert res_noms.data[0].name == "Дождевая каша со щекой"
 
 
-def test_success_tbs_prototype_build_with_filter_and_period():
+def test_success_tbs_service_build_with_filter_and_period():
     """
-    <summary>Проверка расчета ОСВ через прототип с периодом и фильтрацией.</summary>
+    <summary>Проверка расчета ОСВ через tbs_service с периодом и фильтрацией.</summary>
     <description>Рассчитывается ОСВ по 'Говяжьи щеки' за период с 9 по 31 января.</description>
     <expected>Начальный остаток 10000 г, приход 5000 г, расход 2500 г, конечный остаток 12500 г.</expected>
     """
     # Подготовка
-    dto = filter_dto.create("nomenclature.name", "Говяжьи щеки", filter_type_enum.EQUALS)
+    service = tbs_service(storage)
+    dto = filter_dto.create("name", "Говяжьи щеки", filter_type_enum.EQUALS, model_name="nomenclature")
     start = datetime(2026, 1, 9, 0, 0)
     end = datetime(2026, 1, 31, 23, 59)
 
     # Действие
-    rows = tbs_prototype(storage.transactions).build(dto=dto, start_date=start, end_date=end)
+    rows = service.build(dto=dto, start_date=start, end_date=end)
 
     # Проверки
     assert len(rows) == 1
@@ -122,12 +123,14 @@ def test_success_api_post_filter_and_tbs_endpoints(client):
     """
     # Подготовка
     filter_payload = {
-        "field_name": "group.name",
+        "model_name": "group",
+        "field_name": "name",
         "value": "Авторские горячие блюда",
         "filter_type": "EQUALS",
     }
     tbs_payload = {
-        "field_name": "nomenclature.name",
+        "model_name": "nomenclature",
+        "field_name": "name",
         "value": "Крупа дождевая",
         "filter_type": "LIKE",
         "start_date": "2026-01-01T00:00:00",

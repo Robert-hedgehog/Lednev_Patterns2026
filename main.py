@@ -13,12 +13,13 @@ from Src.Logics.reference_service import reference_service
 from datetime import datetime
 from Src.Dtos.filter_dto import filter_dto
 from Src.Logics.domain_prototype import domain_prototype
-from Src.Logics.tbs_prototype import tbs_prototype
+from Src.Logics.tbs_service import tbs_service
 
 storage = storage_manager()
 factory = report_factory()
 converter = convert_factory()
 service = reference_service(storage)
+tbs = tbs_service(storage)
 
 api = connexion.FlaskApp(__name__, specification_dir="./")
 app = api.app
@@ -147,7 +148,7 @@ def get_tbs(body: dict):
         start_date = datetime.fromisoformat(start_raw) if start_raw else None
         end_date = datetime.fromisoformat(end_raw) if end_raw else None
 
-        result = tbs_prototype(storage.transactions).build(
+        result = tbs.build(
             dto=dto,
             start_date=start_date,
             end_date=end_date,

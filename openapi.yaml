@@ -153,7 +153,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Тип сущности (range, storage, group, nomenclature, recipe).
+          description: Тип сущности (range, storage, group, nomenclature, recipe, transaction).
       responses:
         '200':
           description: Список сущностей.
@@ -290,6 +290,9 @@ paths:
             schema:
               type: object
               properties:
+                model_name:
+                  type: string
+                  example: "base_range"
                 field_name:
                   type: string
                   example: "name"
@@ -298,7 +301,7 @@ paths:
                   example: "грамм"
                 filter_type:
                   type: string
-                  example: "LIKE"
+                  example: "EQUALS"
       responses:
         '200':
           description: Отфильтрованный список сущностей.
@@ -322,9 +325,12 @@ paths:
             schema:
               type: object
               properties:
+                model_name:
+                  type: string
+                  example: "nomenclature"
                 field_name:
                   type: string
-                  example: "nomenclature.name"
+                  example: "name"
                 value:
                   type: string
                   example: "Говяжьи щеки"

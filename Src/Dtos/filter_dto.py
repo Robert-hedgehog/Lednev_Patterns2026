@@ -9,19 +9,23 @@ class filter_dto(abstract):
     def __init__(
         self,
         field_name: str = "name",
-        value: str = "",
+        value: object = "",
         filter_type: filter_type_enum = filter_type_enum.EQUALS,
+        model_name: str = "",
     ) -> None:
         """Инициализация параметров фильтрации."""
         super().__init__()
         self.__field_name: str = "name"
-        self.__value: str = ""
+        self.__value: object = ""
         self.__filter_type: filter_type_enum = filter_type_enum.EQUALS
+        self.__model_name: str = ""
 
         self.field_name = field_name
-        if value:
+        if value != "":
             self.value = value
         self.filter_type = filter_type
+        if model_name:
+            self.model_name = model_name
 
     @property
     def field_name(self) -> str:
@@ -35,16 +39,31 @@ class filter_dto(abstract):
         self.__field_name = value.strip()
 
     @property
-    def value(self) -> str:
+    def model_name(self) -> str:
+        """Название вложенной модели для фильтрации."""
+        return self.__model_name
+
+    @model_name.setter
+    def model_name(self, value: str) -> None:
+        """Установка названия вложенной модели."""
+        if value is None:
+            self.__model_name = ""
+            return
+        if not isinstance(value, str):
+            raise argument_exception("model_name", "Название модели должно быть строкой.")
+        self.__model_name = value.strip()
+
+    @property
+    def value(self) -> object:
         """Искомое значение фильтра."""
         return self.__value
 
     @value.setter
-    def value(self, value: str) -> None:
+    def value(self, value: object) -> None:
         """Установка искомого значения."""
         if value is None:
             raise argument_exception("value", "Значение фильтра не может быть None.")
-        self.__value = str(value).strip()
+        self.__value = value.strip() if type(value) is str else value
 
     @property
     def filter_type(self) -> filter_type_enum:
@@ -66,14 +85,16 @@ class filter_dto(abstract):
     @staticmethod
     def create(
         field_name: str,
-        value: str,
+        value: object,
         filter_type: filter_type_enum | str = filter_type_enum.EQUALS,
+        model_name: str = "",
     ) -> "filter_dto":
         """Фабричный метод создания DTO фильтра."""
         dto = filter_dto()
         dto.field_name = field_name
         dto.value = value
         dto.filter_type = filter_type
+        dto.model_name = model_name
         return dto
 
     @classmethod
@@ -84,6 +105,8 @@ class filter_dto(abstract):
         dto.id = data.get("id", str(dto.id))
         if "field_name" in data:
             dto.field_name = data["field_name"]
+        if "model_name" in data:
+            dto.model_name = data["model_name"]
         if "value" in data:
             dto.value = data["value"]
         if "filter_type" in data:

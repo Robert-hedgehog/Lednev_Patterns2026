@@ -7,6 +7,10 @@ class filter_type_enum(Enum):
 
     EQUALS = 1
     LIKE = 2
+    LESS = 3
+    LESS_OR_EQUAL = 4
+    GREATER = 5
+    GREATER_OR_EQUAL = 6
 
     @staticmethod
     def from_string(value: str) -> "filter_type_enum":
@@ -14,6 +18,10 @@ class filter_type_enum(Enum):
         mapping = {
             "EQUALS": filter_type_enum.EQUALS,
             "LIKE": filter_type_enum.LIKE,
+            "LESS": filter_type_enum.LESS,
+            "LESS_OR_EQUAL": filter_type_enum.LESS_OR_EQUAL,
+            "GREATER": filter_type_enum.GREATER,
+            "GREATER_OR_EQUAL": filter_type_enum.GREATER_OR_EQUAL,
         }
         normalized = str(value).strip().upper()
         result = mapping.get(normalized)
