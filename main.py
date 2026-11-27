@@ -10,11 +10,16 @@ from Src.Dtos.report_type_enum import report_type_enum
 from Src.Dtos.report_result_dto import report_result_dto
 from Src.Core.validator import argument_exception, operation_exception
 from Src.Logics.reference_service import reference_service
+from datetime import datetime
+from Src.Dtos.filter_dto import filter_dto
+from Src.Logics.domain_prototype import domain_prototype
+from Src.Logics.tbs_service import tbs_service
 
 storage = storage_manager()
 factory = report_factory()
 converter = convert_factory()
 service = reference_service(storage)
+tbs = tbs_service(storage)
 
 api = connexion.FlaskApp(__name__, specification_dir="./")
 app = api.app
@@ -121,6 +126,37 @@ def delete_entity(entity_type: str, entity_id: str):
     except operation_exception as ex:
         status = 404 if "не найдена" in str(ex) else 409
         return jsonify({"detail": str(ex)}), status
+
+
+def filter_entities(entity_type: str, body: dict):
+    """Фильтрация доменных сущностей по DTO через прототип."""
+    try:
+        dto = filter_dto.from_dict(body)
+        items = service.get_all(entity_type)
+        filtered = domain_prototype(items).filter(dto).data
+        return jsonify(converter.convert(filtered)), 200
+    except argument_exception as ex:
+        return jsonify({"detail": str(ex)}), 400
+
+
+def get_tbs(body: dict):
+    """Формирование оборотно-сальдовой ведомости через сервис ОСВ."""
+    try:
+        payload = body or {}
+        dto = filter_dto.from_dict(payload) if payload.get("value") else None
+        start_raw = payload.get("start_date")
+        end_raw = payload.get("end_date")
+        start_date = datetime.fromisoformat(start_raw) if start_raw else None
+        end_date = datetime.fromisoformat(end_raw) if end_raw else None
+
+        result = tbs.build(
+            dto=dto,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return jsonify(converter.convert(result)), 200
+    except (argument_exception, ValueError) as ex:
+        return jsonify({"detail": str(ex)}), 400
 
 
 api.add_api("openapi.yaml")

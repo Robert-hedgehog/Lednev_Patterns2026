@@ -153,7 +153,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Тип сущности (range, storage, group, nomenclature, recipe).
+          description: Тип сущности (range, storage, group, nomenclature, recipe, transaction).
       responses:
         '200':
           description: Список сущностей.
@@ -271,3 +271,86 @@ paths:
           description: Сущность не найдена.
         '409':
           description: Запрещено удалять связанную сущность.
+
+  /api/filter/{entity_type}:
+    post:
+      summary: Отфильтровать доменные сущности по DTO
+      operationId: main.filter_entities
+      parameters:
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Тип сущности (nomenclature, group, range, recipe, storage, transaction).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model_name:
+                  type: string
+                  example: "base_range"
+                field_name:
+                  type: string
+                  example: "name"
+                value:
+                  type: string
+                  example: "грамм"
+                filter_type:
+                  type: string
+                  example: "EQUALS"
+      responses:
+        '200':
+          description: Отфильтрованный список сущностей.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Ошибка валидации параметров фильтрации.
+
+  /api/tbs:
+    post:
+      summary: Сформировать оборотно-сальдовую ведомость (ОСВ) с фильтрацией
+      operationId: main.get_tbs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model_name:
+                  type: string
+                  example: "nomenclature"
+                field_name:
+                  type: string
+                  example: "name"
+                value:
+                  type: string
+                  example: "Говяжьи щеки"
+                filter_type:
+                  type: string
+                  example: "EQUALS"
+                start_date:
+                  type: string
+                  example: "2026-01-09T00:00:00"
+                end_date:
+                  type: string
+                  example: "2026-01-31T23:59:59"
+      responses:
+        '200':
+          description: Сформированная ОСВ.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Некорректные параметры фильтрации или периода.
