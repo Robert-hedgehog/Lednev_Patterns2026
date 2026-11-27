@@ -9,6 +9,8 @@ from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.ingredient_model import ingredient_model
 from Src.Models.recipe_model import recipe_model
 from Src.Models.transaction_model import transaction_model
+from Src.Core.event_type import event_type
+from Src.Logics.observer import observer
 
 
 class reference_service:
@@ -136,6 +138,7 @@ class reference_service:
 
         items.append(entity)
         self.__index_entity(entity)
+        observer.create(event_type.crud_create(), {"entity_type": entity_type, "id": str(entity.id)})
         return entity
 
     def update(self, entity_type: str, entity_id: str, data: dict) -> abstract:
@@ -157,6 +160,7 @@ class reference_service:
         items = self.__storage.data[key]
         items[items.index(existing)] = updated
         self.__index_entity(updated)
+        observer.create(event_type.crud_update(), {"entity_type": entity_type, "id": str(updated.id)})
         return updated
 
     def delete(self, entity_type: str, entity_id: str) -> bool:
@@ -170,4 +174,5 @@ class reference_service:
 
         self.__unindex_entity(existing)
         self.__storage.data[key].remove(existing)
+        observer.create(event_type.crud_delete(), {"entity_type": entity_type, "id": str(existing.id)})
         return True

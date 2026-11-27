@@ -4,6 +4,9 @@ from Src.Core.abstract_manager import abstract_manager
 from Src.Core.validator import operation_exception
 from Src.Models.settings_model import settings_model
 from Src.Logics.deserialize_factory import deserialize_factory
+from Src.Core.event_type import event_type
+from Src.Core.validator import validator
+from Src.Logics.observer import observer
 
 
 class settings_manager(abstract_manager):
@@ -39,6 +42,7 @@ class settings_manager(abstract_manager):
                 self._data = json.load(file)
             self._file_name = target_file
             self._is_loaded = self.convert()
+            observer.create(event_type.load_settings(), {"file_name": target_file})
         except Exception as ex:
             raise operation_exception(f"Ошибка загрузки настроек: {ex}")
 
@@ -55,3 +59,19 @@ class settings_manager(abstract_manager):
     def settings(self) -> settings_model:
         """Текущие настройки приложения."""
         return self.__settings
+    
+    @settings.setter
+    def settings(self, value: settings_model) -> None:
+        """Установка новых настроек приложения."""
+        validator.validate(value, settings_model)
+        self.__settings = value
+        observer.create(
+            event_type.change_settings(),
+            {"boss_name": value.boss_name, "response_format": value.response_format.name},
+        )
+
+    def update(self, **kwargs) -> None:
+        """Изменение параметров настроек с уведомлением наблюдателей."""
+        for field, value in kwargs.items():
+            setattr(self.__settings, field, value)
+        observer.create(event_type.change_settings(), kwargs)

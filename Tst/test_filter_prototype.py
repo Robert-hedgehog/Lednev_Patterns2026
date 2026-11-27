@@ -108,11 +108,11 @@ def test_success_tbs_service_build_with_filter_and_period():
     # Проверки
     assert len(rows) == 1
     row = rows[0]
-    assert row["unit_name"] == "грамм"
-    assert row["opening_balance"] == 10000.0
-    assert row["income"] == 5000.0
-    assert row["outcome"] == 2500.0
-    assert row["closing_balance"] == 12500.0
+    assert row.unit_name == "грамм"
+    assert row.opening_balance == 10000.0
+    assert row.income == 5000.0
+    assert row.outcome == 2500.0
+    assert row.closing_balance == 12500.0
 
 
 def test_success_api_post_filter_and_tbs_endpoints(client):

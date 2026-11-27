@@ -14,7 +14,7 @@ from Src.Models.settings_model import settings_model
 from Src.Models.transaction_model import transaction_model
 from Src.Dtos.filter_dto import filter_dto
 from Src.Dtos.tbs_row_dto import tbs_row_dto
-
+from Src.Dtos.log_entry_dto import log_entry_dto
 
 class deserialize_factory(abstract_deserializer):
     """Фабрика десериализации данных."""
@@ -35,6 +35,7 @@ class deserialize_factory(abstract_deserializer):
             "transaction_model": transaction_model,
             "filter_dto": filter_dto,
             "tbs_row_dto": tbs_row_dto,
+            "log_entry_dto": log_entry_dto,
         }
         self.__handlers: Dict[type, Callable] = {
             str: self.__handle_string,
