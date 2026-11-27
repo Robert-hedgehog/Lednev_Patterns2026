@@ -126,7 +126,8 @@ def delete_entity(entity_type: str, entity_id: str):
     except operation_exception as ex:
         status = 404 if "не найдена" in str(ex) else 409
         return jsonify({"detail": str(ex)}), status
-    
+
+
 def filter_entities(entity_type: str, body: dict):
     """Фильтрация доменных сущностей по DTO через прототип."""
     try:
@@ -139,7 +140,7 @@ def filter_entities(entity_type: str, body: dict):
 
 
 def get_tbs(body: dict):
-    """Формирование оборотно-сальдовой ведомости через прототип с учетом фильтрации."""
+    """Формирование оборотно-сальдовой ведомости через сервис ОСВ."""
     try:
         payload = body or {}
         dto = filter_dto.from_dict(payload) if payload.get("value") else None
@@ -153,7 +154,7 @@ def get_tbs(body: dict):
             start_date=start_date,
             end_date=end_date,
         )
-        return jsonify(result), 200
+        return jsonify(converter.convert(result)), 200
     except (argument_exception, ValueError) as ex:
         return jsonify({"detail": str(ex)}), 400
 

@@ -13,6 +13,7 @@ from Src.Models.organization_model import organization_model
 from Src.Models.settings_model import settings_model
 from Src.Models.transaction_model import transaction_model
 from Src.Dtos.filter_dto import filter_dto
+from Src.Dtos.tbs_row_dto import tbs_row_dto
 
 
 class deserialize_factory(abstract_deserializer):
@@ -33,6 +34,7 @@ class deserialize_factory(abstract_deserializer):
             "company": organization_model,
             "transaction_model": transaction_model,
             "filter_dto": filter_dto,
+            "tbs_row_dto": tbs_row_dto,
         }
         self.__handlers: Dict[type, Callable] = {
             str: self.__handle_string,
