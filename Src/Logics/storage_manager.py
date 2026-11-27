@@ -9,6 +9,8 @@ from Src.Models.ingredient_model import ingredient_model
 from Src.Models.recipe_model import recipe_model
 from datetime import datetime
 from Src.Models.transaction_model import transaction_model
+from Src.Core.event_type import event_type
+from Src.Logics.observer import observer
 
 
 class storage_manager(abstract_manager):
@@ -170,6 +172,10 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.storage_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        observer.create(
+            event_type.storage_operation(),
+            {"operation": "add_storage", "id": str(item.id), "name": item.name},
+        )
         self.__version += 1
 
     def add_unit(self, item: range_model) -> None:
@@ -321,4 +327,8 @@ class storage_manager(abstract_manager):
         items = self.__data.setdefault(storage_manager.transaction_key(), [])
         if not any(str(x.id) == str(item.id) for x in items):
             items.append(item)
+        observer.create(
+            event_type.storage_operation(),
+            {"operation": "add_transaction", "id": str(item.id), "quantity": item.quantity},
+        )
         self.__version += 1

@@ -1,6 +1,6 @@
 import io
 import urllib.parse
-from flask import Response, send_file, abort, jsonify
+from flask import Response, send_file, abort, jsonify, request
 import connexion
 
 from Src.Logics.storage_manager import storage_manager
@@ -14,15 +14,27 @@ from datetime import datetime
 from Src.Dtos.filter_dto import filter_dto
 from Src.Logics.domain_prototype import domain_prototype
 from Src.Logics.tbs_service import tbs_service
+from Src.Core.event_type import event_type
+from Src.Logics.observer import observer
+from Src.Logics.log_service import log_service
 
 storage = storage_manager()
 factory = report_factory()
 converter = convert_factory()
 service = reference_service(storage)
 tbs = tbs_service(storage)
+logger = log_service("app.log")
 
 api = connexion.FlaskApp(__name__, specification_dir="./")
 app = api.app
+
+@app.before_request
+def log_web_request():
+    """Генерация события при вызове любого Web-метода."""
+    observer.create(
+        event_type.web_request(),
+        {"method": request.method, "path": request.path},
+    )
 
 
 def build_http_response(dto: report_result_dto):

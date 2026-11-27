@@ -193,3 +193,4 @@ cython_debug/
 _infra/
 _legacy/
 demo.py
+app.log

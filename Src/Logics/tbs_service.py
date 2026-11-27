@@ -7,6 +7,8 @@ from Src.Logics.domain_prototype import domain_prototype
 from Src.Logics.storage_manager import storage_manager
 from Src.Models.range_model import range_model
 from Src.Models.transaction_model import transaction_model
+from Src.Core.event_type import event_type
+from Src.Logics.observer import observer
 
 
 class tbs_service:
@@ -42,7 +44,12 @@ class tbs_service:
             turnover_proto = turnover_proto.filter(to_filter)
 
         turnover_rows = self.__calculate_turnover(turnover_proto.data)
-        return self.__merge_results(opening_rows, turnover_rows)
+        result = self.__merge_results(opening_rows, turnover_rows)
+        observer.create(
+            event_type.tbs_build(),
+            {"start_date": str(start_date), "end_date": str(end_date), "rows_count": len(result)},
+        )
+        return result
 
     def __create_row(self, tx: transaction_model, base_unit: Optional[range_model]) -> tbs_row_dto:
         """Создание DTO строки ОСВ для пары склад и номенклатура."""
